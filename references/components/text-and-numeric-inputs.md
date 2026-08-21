@@ -12,6 +12,7 @@ This file defines exactly one component family. Select subtypes by data type, fr
 | Number input / 数字输入框 | Exact numeric typing and validation matter | Value is an identifier, phone, postal code, or card number | `<input type="number" min max step>` |
 | Spinbutton / 步进数字框 | Discrete numeric range benefits from increment/decrement controls | Range is broad/approximate or direct typing is rare | `number input with stepper buttons` |
 | Slider / 单值滑块 | Approximate value over a continuum; immediate preview is useful | Exact value entry is important | `<input type="range">` plus output |
+| Range slider / 双滑块范围 | Select minimum and maximum within one bounded continuum | Bounds require exact typing or are unbounded | `two-thumb range control` |
 | Currency input / 金额输入框 | Locale-aware decimal value with currency prefix/suffix | It is display-only money | `raw numeric model + formatted presentation` |
 | Masked input / 掩码输入 | Format is fixed and positional, such as expiry or license pattern | Formatting varies by locale or user | `masked text input with raw value separation` |
 | OTP/PIN input / 验证码输入 | Short fixed-length verification code; paste and autofill matter | It is a long secret/password | `one semantic input styled as cells` |
@@ -58,6 +59,14 @@ Keep a raw numeric value separate from localized display formatting.
 
 ```tsx
 <label>预算<span aria-hidden>¥</span><input inputMode="decimal" value={amountText} onChange={parseAmount} aria-describedby="currency" /></label><span id="currency">人民币</span>
+```
+
+### Range slider — 范围滑块
+
+Use for an approximate bounded interval. Pair it with readable values and, when precision matters, numeric inputs.
+
+```tsx
+<RangeSlider label="价格区间" min={0} max={5000} value={[minPrice,maxPrice]} onValueChange={setPrices} />
 ```
 
 ### Masked input — 格式化输入框

@@ -7,6 +7,7 @@ This file defines exactly one component family. Select subtypes by grouping, who
 |---|---|---|---|
 | Base card/tile / 基础卡片 | Group short information and possibly internal actions | It needs one whole-card navigation target | `<article>` with explicit links/buttons |
 | Clickable card/tile / 可点击卡片 | Entire surface navigates to one destination; no nested actions | Multiple independent actions exist | `single stretched link/interactive target` |
+| Selectable card/tile / 可选择卡片 | Rich visual options use a radio or checkbox value model | Card navigates or triggers a command | `radio/checkbox semantics over card group` |
 | Expandable card/tile / 可展开卡片 | Reveal secondary content inline while preserving context | Focused task or overlay is more appropriate | `disclosure semantics; separate trigger if nested actions exist` |
 | KPI/stat card / 指标卡 | One metric, unit, period, and comparison are primary | Multiple rows/series require a chart/table | `labelled article with value and delta` |
 | Persona / 人员信息条 | Avatar plus name, role, presence, and compact metadata identify a person | Only an image identity is needed | `<Persona avatar presence meta />` |
@@ -55,6 +56,14 @@ Use when the entire card navigates to one destination and contains no independen
 
 ```tsx
 <article className="card"><a className="stretched-link" href={`/projects/${p.id}`}><h3>{p.name}</h3><p>{p.summary}</p></a></article>
+```
+
+### Selectable card — 可选择卡片
+
+Use for visually rich options such as plans. Preserve radio semantics for single selection and checkbox semantics for multiple selection.
+
+```tsx
+<label className="selectable-card"><input type="radio" name="plan" value={plan.id} checked={value===plan.id} onChange={()=>setValue(plan.id)} /><PlanSummary plan={plan} /></label>
 ```
 
 ### Expandable card — 可展开卡片

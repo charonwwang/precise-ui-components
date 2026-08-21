@@ -12,6 +12,7 @@ This file defines exactly one component family. Select subtypes by scope, known 
 | Inline loading / 行内加载 | Action changes state in place, e.g. saving a row/button | Whole surface is unavailable | `button/row status with preserved label` |
 | Pending button / 按钮提交中 | One triggered action must prevent duplicate submission | Several regions or a background process are loading | preserve label/width + `aria-busy` + disabled |
 | Local region loading / 局部区域加载 | One bounded panel is unavailable while the page remains usable | Final layout is stable enough for a skeleton | `labelled region + local status/spinner` |
+| Blocking surface loader / 阻塞式局部遮罩 | Interaction with one bounded surface would be unsafe during a short operation | Controls can be disabled or background can remain usable | `loader over bounded surface, not whole app` |
 | Route progress / 路由进度 | Navigation data loading replaces the page and exact progress is unknown | Only one local control is pending | `top linear indeterminate progress` |
 | Row-card skeleton / 行卡片骨架 | Repeated item shape is stable and initial data is loading | Existing items remain usable during refresh | `repeated decorative skeletons in busy region` |
 | Optimistic pending / 乐观更新等待态 | Success is likely and rollback is safe | Failure is costly or state cannot be restored | `update immediately + subtle pending + rollback` |
@@ -22,6 +23,7 @@ This file defines exactly one component family. Select subtypes by scope, known 
 | Per-item queue progress / 分项队列进度 | Multiple uploads/jobs can retry, cancel, or fail independently | Operation is one atomic task | `per-item states and progress, optional aggregate` |
 | Step progress / 阶段进度 | Named discrete stages communicate workflow position | Continuous completion percentage | `ordered stage list` |
 | Result/status state / 结果状态 | Operation finished and next actions matter | Work is still in progress | `success/error result panel` |
+| Load-more pending / 加载更多等待态 | Existing list remains visible while the next cursor page loads | Whole collection is initial-loading | `footer status + disabled load-more control` |
 
 ## Detailed variants
 
@@ -103,6 +105,22 @@ Use for one triggered action. Preserve the label/width, disable duplicate submis
 
 ```tsx
 <button disabled={saving} aria-busy={saving} onClick={save}>{saving?<><Spinner aria-hidden />保存中…</>:'保存'}</button>
+```
+
+### Blocking surface loader — 阻塞式局部遮罩
+
+Block only the bounded surface whose interaction would be unsafe. Do not cover the entire application for an unrelated local operation.
+
+```tsx
+<section aria-busy={loading} aria-label="订单详情"><OrderDetail />{loading&&<div className="surface-loader" role="status">正在更新…</div>}</section>
+```
+
+### Load-more pending row — 加载更多等待行
+
+Keep existing items and scroll position stable while the next cursor page loads.
+
+```tsx
+<><ItemList items={items} />{loadingMore&&<div role="status">正在加载更多…</div>}<button disabled={loadingMore||!hasMore} onClick={loadMore}>加载更多</button></>
 ```
 
 ### Inline saving status — 行内保存状态

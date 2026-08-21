@@ -5,13 +5,14 @@ This file defines exactly one component family. Select subtypes by state relatio
 ## Decision table
 | Subtype | Choose for this case | Reject or switch when | Code example / 代码示例 |
 |---|---|---|---|
-| Blocking surface loader / 阻塞式局部遮罩 | Interaction with one surface would be unsafe during a short operation | Controls can simply be disabled or background can stay usable | `loader over bounded surface, not whole app` |
 | Fade transition / 淡入淡出 | Low-spatiality status, scrim, or decoration changes visibility | Users need to understand an origin or direction | `opacity transition with reduced-motion fallback` |
+| Anchored scale-fade / 锚点缩放淡入 | Small menu/popover emerges from its trigger | Surface comes from a viewport edge or has no meaningful anchor | `transform origin derived from anchor placement` |
 | Crossfade replacement / 交叉淡化切换 | Peer content replaces content in one stable container | Forward/back direction or object continuity matters | `keyed crossfade inside stable region` |
 | Edge slide transition / 边缘滑入滑出 | Drawer/sheet enters from the edge where it conceptually lives | Direction has no spatial meaning | `translate from the actual placement edge` |
 | Shared-axis transition / 共享轴切换 | Ordered peer views or wizard steps have forward/back direction | Views are unrelated or motion would distract | `directional transition keyed by step` |
 | Layout-reorder transition / 布局重排动画 | Insert, remove, sort, filter, or drag changes item positions | Stable item identity is unavailable | `stable keys + short layout animation` |
-| Range slider / 双滑块范围 | Select min/max within one bounded continuum | Bounds need exact typing or are unbounded | `multi-thumb range control` |
+| Expand-collapse reveal / 展开收起揭示动画 | Disclosure content changes height and spatial reveal aids comprehension | Motion adds no information or reduced motion is requested | `aria-expanded` + grid/clip reveal, no hard-coded height |
+| Container transform / 容器变换 | A visible object expands into its detail surface and identity continuity matters | Source and destination do not share identity | `morph from stable source ID to detail container` |
 
 ## Detailed variants
 
@@ -59,6 +60,14 @@ Use for drawers and sheets whose physical edge conveys where the surface lives. 
 <Drawer side="right" motion="slide" open={open} onOpenChange={setOpen}><Inspector /></Drawer>
 ```
 
+### Anchored scale-and-fade — 锚点缩放淡入
+
+Use for a small popover or menu emerging from its trigger. Derive transform origin from actual placement; motion does not define the popup's menu, listbox, or popover semantics.
+
+```tsx
+<Popover motion="scale-fade" transformOrigin="anchor" trigger={<button>更多</button>}><Actions /></Popover>
+```
+
 ### Scrim fade — 遮罩淡入淡出
 
 Use with modal surfaces to communicate background de-emphasis. It accompanies the dialog/sheet motion and is never the focus target.
@@ -91,8 +100,10 @@ Use lift, placeholder, and drop-settle cues during direct manipulation. Always p
 <SortableList items={items} renderOverlay={item=><DragPreview item={item} />} keyboardReorder onReorder={setItems} />
 ```
 
-### Range slider — 范围滑块
+### Container transform — 容器变换
+
+Use when one visible object clearly expands into its detail surface and preserving identity improves comprehension.
 
 ```tsx
-<RangeSlider label="价格区间" min={0} max={5000} value={[minPrice,maxPrice]} onValueChange={setPrices} />
+<ContainerTransform fromId={`card-${id}`} open={open}><DetailPanel id={id} /></ContainerTransform>
 ```

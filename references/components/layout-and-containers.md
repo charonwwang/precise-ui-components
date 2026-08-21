@@ -14,7 +14,6 @@ This file defines exactly one component family. Select subtypes by page shell, s
 | Stack layout / 堆叠布局 | Children flow on one axis with consistent spacing | Two-dimensional placement is required | `<Stack gap="md" />` |
 | Scroll area / 滚动区域 | A bounded region intentionally owns overflow | Whole-page scrolling is sufficient | `labelled overflow container` |
 | Sticky region / 粘性区域 | Header/actions must remain visible within scroll context | It obscures content or nested scroll makes behavior unclear | `position: sticky` with offset |
-| Container transform / 容器变换 | Visible card/object expands into its own detail surface | Source and destination do not share identity | `morph from stable source ID to detail container` |
 | Inline drawer / 行内抽屉 | Supplemental details/actions should coexist side-by-side with main content | Space is narrow or attention must be forced | `drawer that shifts/resizes layout` |
 
 ## Detailed variants
@@ -101,14 +100,6 @@ Use for variable-height visual browsing, not rows requiring alignment.
 
 ```tsx
 <hr aria-hidden="true" className="border-subtle" />
-```
-
-### Container transform — 容器变换
-
-Use when one visible object clearly expands into its detail surface and preserving identity improves comprehension. Reject for unrelated pages or large layout changes.
-
-```tsx
-<ContainerTransform fromId={`card-${id}`} open={open}><DetailPanel id={id} /></ContainerTransform>
 ```
 
 ### Inline side panel — 行内侧面板

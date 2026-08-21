@@ -94,6 +94,12 @@ Map the semantic subtype to what is actually installed; names differ across libr
 
 Library labels are discovery hints, not interchangeable APIs. Inspect actual exports, wrappers, and usage in the repository.
 
+### Provider and context APIs
+
+Distinguish “cannot render” from “renders without the recommended contextual behavior.” Some libraries expose static convenience APIs alongside provider/context APIs. Verify the installed version and report the exact limitation.
+
+For example, Ant Design's static `message` API can render without an enclosing `App`, but it cannot reliably consume dynamic `ConfigProvider` context such as theme or locale and may emit a context warning. Prefer the `App` context API when contextual configuration matters; do not describe the static API as categorically unusable.
+
 ## Styling adaptation
 
 - Reuse design tokens, density, focus ring, spacing, radii, elevation, breakpoints, and motion conventions already present.

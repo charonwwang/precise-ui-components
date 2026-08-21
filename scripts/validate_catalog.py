@@ -61,7 +61,7 @@ def main() -> None:
 
     if not re.search(r"^name:\s+ui-spec$", skill_text, re.M):
         fail("SKILL.md name is missing or changed")
-    for required in ["references/component-index.md", "references/framework-adaptation.md"]:
+    for required in ["references/component-index.md", "references/greenfield-workflow.md", "references/framework-adaptation.md"]:
         if required not in skill_text:
             fail(f"SKILL.md does not route to {required}")
 
@@ -79,7 +79,7 @@ def main() -> None:
             fail(f"component index does not route to {family}")
 
     markdown_files = [SKILL, INDEX, *sorted(COMPONENTS.glob("*.md"))]
-    for optional in [ROOT / "README.md", ROOT / "references" / "framework-adaptation.md", ROOT / "references" / "prompt-recipes.md"]:
+    for optional in [ROOT / "README.md", ROOT / "references" / "greenfield-workflow.md", ROOT / "references" / "framework-adaptation.md", ROOT / "references" / "prompt-recipes.md"]:
         if optional.is_file():
             markdown_files.append(optional)
     for path in markdown_files:

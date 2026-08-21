@@ -13,7 +13,6 @@ This file defines exactly one component family. Select subtypes by single versus
 | Multi-open accordion / 多开手风琴 | Several peer sections may stay open for comparison | Vertical length becomes unmanageable | `<Accordion type="multiple" />` |
 | Show more-less / 显示更多收起 | Truncated content expands inline | Content is a separate task or destination | `<button aria-expanded={open}>显示更多</button>` |
 | Expandable row / 可展开行 | A table/list row reveals secondary details in context | Details need editing space or column comparison | `row disclosure controlling a labelled detail row` |
-| Expand-collapse reveal / 展开收起揭示动画 | Disclosure content changes height and the spatial reveal aids comprehension | Motion adds no information or reduced motion is requested | `aria-expanded` + grid/clip reveal, no hard-coded height |
 
 ## Detailed variants
 

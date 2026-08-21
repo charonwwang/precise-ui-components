@@ -20,7 +20,7 @@ This file defines exactly one component family. Select subtypes by query scope, 
 
 ### Command palette — 命令面板
 
-Use for keyboard-first search across destinations and executable commands. Distinguish result types and do not treat it as domain-data search.
+Use for keyboard-first search across destinations and executable commands. Distinguish result types and do not treat it as domain-data search. An editable search field controlling command results may correctly use combobox + listbox semantics; the command outcome does not invalidate that input/popup pattern.
 
 ```tsx
 <CommandPalette shortcut="Mod+K" groups={[{label:'页面',items:routes},{label:'命令',items:commands}]} onSelect={executeOrNavigate} />

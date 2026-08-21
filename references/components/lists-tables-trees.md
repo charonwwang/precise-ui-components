@@ -5,7 +5,6 @@ This file defines exactly one component family. Select subtypes by one-dimension
 ## Decision table
 | Subtype | Choose for this case | Reject or switch when | Code example / 代码示例 |
 |---|---|---|---|
-| Selectable card/tile / 可选择卡片 | Rich visual options such as plans; radio or checkbox selection model | Card navigates or triggers a command | `radio/checkbox semantics over card group` |
 | Semantic list / 语义列表 | Items are one-dimensional and do not require column comparison | Values align into comparable fields | `<ul>`/`<ol>` |
 | Description list / 描述列表 | Key-value facts for one entity | Many entities must be compared row-by-row | `<dl><dt><dd>` |
 | Structured list / 结构化列表 | Rows have repeated secondary fields but remain primarily navigational/read-only | Column operations, headers, sorting, or editing matter | `repeated row layout with clear headings` |
@@ -18,19 +17,8 @@ This file defines exactly one component family. Select subtypes by one-dimension
 | Feed / 信息流 | New articles/items load as user scrolls and each item is a content region | Fixed dataset or tabular comparison | `feed/article semantics and position restoration` |
 | Timeline / 时间线 | Chronological sequence and temporal relation are primary | Users need sortable columns or dense comparison | ordered list with `<time>` |
 | Virtualized collection / 虚拟化集合 | Rendering thousands of rows/items is a measured bottleneck | Dataset is modest; native DOM improves accessibility/search | `virtualization with stable keys and accessible counts` |
-| Editable combobox / 可编辑组合框 | Suggestions help, but an unmatched custom value is valid | Values must be controlled vocabulary | `<Combobox allowCustomValue />` |
-| Datalist / 原生建议列表 | Lightweight native suggestions where custom values remain valid and advanced popup behavior is unnecessary | Need reliable rich rendering, async states, or controlled keyboard behavior | `<input list="cities" /><datalist id="cities">…</datalist>` |
-| Listbox / 列表框 | Options should remain visible; selection itself is the task; one or many choices | Space is constrained and the list should collapse | `role="listbox"` with `role="option"` |
 
 ## Detailed variants
-
-### Selectable card — 可选择卡片
-
-Use for visually rich options such as plans. Preserve radio semantics for single selection and checkbox semantics for multiple selection.
-
-```tsx
-<label className="selectable-card"><input type="radio" name="plan" value={plan.id} checked={value===plan.id} onChange={()=>setValue(plan.id)} /><PlanSummary plan={plan} /></label>
-```
 
 ### Data table — 数据表格
 
@@ -54,7 +42,7 @@ Columns describe comparable fields; rows represent records. Use native table sem
 
 ### Virtualized table — 虚拟化表格
 
-For very large datasets; preserve headers, row identity, keyboard access, and screen-reader alternatives.
+For very large tabular datasets; preserve headers, row identity, keyboard access, and screen-reader alternatives. A one-dimensional chapter, message, or activity collection remains a virtualized list/collection rather than becoming a table merely because a library exposes table virtualization.
 
 ```tsx
 <VirtualTable rows={rows} rowKey="id" estimatedRowHeight={44} columns={columns} overscan={8} />
@@ -116,28 +104,20 @@ Use only when both spreadsheet-like grid interaction and large-data windowing ar
 
 Reject this for a large read-only dataset that only needs row sorting/filtering; that remains a virtualized table.
 
+### Virtualized collection — 虚拟化集合
+
+Window a measured large one-dimensional list while preserving stable item keys, total/item position announcements where needed, focus, search, and return-to-position behavior.
+
+```tsx
+<VirtualList items={chapters} itemKey={x=>x.id} estimateSize={()=>48} overscan={8} aria-label="章节" />
+```
+
 ### Treegrid — 树形数据网格
 
 Use when hierarchical rows also have comparable columns or editable cells. Use a tree for hierarchy without columns and a data grid for flat rows.
 
 ```tsx
 <TreeGrid rows={hierarchicalRows} columns={columns} expandedIds={expanded} onExpandedChange={setExpanded} />
-```
-
-### Listbox — 列表框
-
-An always-visible selectable list, not a floating dropdown.
-
-```tsx
-<ul role="listbox" aria-label="主题">{themes.map(x => <li role="option" aria-selected={x.id === theme} onClick={() => setTheme(x.id)}>{x.name}</li>)}</ul>
-```
-
-### Datalist — 原生建议列表
-
-Use for lightweight native suggestions when custom values remain valid. Do not promise the rendering or async behavior of a fully controlled combobox.
-
-```tsx
-<label>浏览器<input list="browsers" value={browser} onChange={e=>setBrowser(e.target.value)} /></label><datalist id="browsers"><option value="Chrome" /><option value="Firefox" /></datalist>
 ```
 
 ### Inline editable text — 行内编辑

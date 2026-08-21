@@ -13,6 +13,7 @@ This file defines exactly one component family. Select subtypes by date versus t
 | Date-time picker / 日期时间选择器 | One timestamp; timezone and storage semantics are explicit | Date and time can be collected independently without ambiguity | `<DateTimePicker timezone="…" />` |
 | Calendar view / 日历视图 | Browsing/scheduling events is the main task; surface remains visible | Only a date value is needed in a form | `month/week/day calendar surface` |
 | Duration input / 时长输入 | Elapsed quantity such as 2h 30m, not clock time | User is selecting a time of day | `grouped numeric fields with canonical seconds/minutes model` |
+| Recurrence editor / 重复规则编辑器 | Repeating schedules need frequency, interval, weekdays, and end condition | One-off date/time or a simple fixed repeat toggle | `recurrence form producing RRULE-like data` |
 
 ## Detailed variants
 
@@ -104,4 +105,12 @@ Use for elapsed quantities rather than a time of day. Store one canonical unit a
 
 ```tsx
 <DurationInput valueSeconds={duration} units={['hours','minutes']} onValueChange={setDuration} />
+```
+
+### Recurrence editor — 重复规则编辑器
+
+Use for schedules with frequency, interval, weekdays, and an end condition. Always render a human-readable summary of the generated rule.
+
+```tsx
+<RecurrenceEditor value={rule} timezone="Asia/Shanghai" onChange={setRule} /><output>{summarizeRule(rule)}</output>
 ```

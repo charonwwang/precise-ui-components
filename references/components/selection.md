@@ -9,6 +9,9 @@ This file defines exactly one component family. Select subtypes by value model, 
 | Select-only combobox / 只选组合框 | Custom-styled single choice where users should explore without changing the committed value until selection | Native control is sufficient; typing is required | `role="combobox"` + listbox popup, no editable text |
 | Searchable select / 可搜索选择器 | Large known set; typed text only filters; submitted value must match an option | Arbitrary values are valid | `<Combobox allowCustomValue={false} />` |
 | Autocomplete / 自动补全 | Input is primary and suggestions accelerate entry, often remote or history-based | User merely needs to choose from a stable short list | `<Autocomplete loadOptions debounceMs={250} />` |
+| Editable combobox / 可编辑组合框 | Suggestions assist entry and an unmatched custom value remains valid | Submitted value must come from controlled options | `<Combobox allowCustomValue />` |
+| Datalist / 原生建议列表 | Lightweight native suggestions with valid custom values and no rich popup needs | Need controlled async states, rich rows, or consistent popup behavior | `<input list="cities"><datalist id="cities">` |
+| Listbox / 列表框 | Options remain visible and selection itself is the task | Space is constrained and options should collapse | `role="listbox"` with `role="option"` |
 | Multi-select / 多选选择器 | Multiple known values, compact field, selections summarized as chips or count | Users must compare every option simultaneously | `<MultiSelect renderValue="chips" />` |
 | Grouped select / 分组选择器 | Flat selection with a small number of non-selectable category headings | Parent-child path matters or groups expand independently | `<optgroup>` or grouped listbox |
 | Cascader / 级联选择器 | User chooses a path through predictable dependent levels, such as province/city/district | Hierarchy is irregular, deep, or needs arbitrary branch expansion | `<Cascader value={path} />` |
@@ -68,7 +71,7 @@ Select nodes from a collapsible tree; useful when hierarchy is deep or branches 
 
 Prompt phrase: `树选择器（tree select），展开/折叠与选中是两个独立操作，箭头键遍历可见节点。`
 
-### Combobox — 组合框
+### Editable combobox — 可编辑组合框
 
 An editable input with suggestions. It may allow a custom value; say explicitly whether it does.
 
@@ -77,6 +80,22 @@ An editable input with suggestions. It may allow a custom value; say explicitly 
 ```
 
 Prompt phrase: `可自由输入的组合框（editable combobox），输入时显示建议列表；Enter 选建议，未匹配文本也可提交。`
+
+### Datalist — 原生建议列表
+
+Use for lightweight native suggestions when custom values remain valid. Do not promise rich rendering or fully controlled asynchronous popup behavior.
+
+```tsx
+<label>城市<input list="cities" value={city} onChange={e=>setCity(e.target.value)} /></label><datalist id="cities"><option value="北京" /><option value="上海" /></datalist>
+```
+
+### Listbox — 列表框
+
+An always-visible selectable collection, not a floating dropdown.
+
+```tsx
+<ul role="listbox" aria-label="主题">{themes.map(x => <li role="option" aria-selected={x.id===theme}>{x.name}</li>)}</ul>
+```
 
 ### Autocomplete / typeahead — 自动补全 / 即时建议
 

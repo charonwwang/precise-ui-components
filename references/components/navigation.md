@@ -5,9 +5,6 @@ This file defines exactly one component family. Select subtypes by destination s
 ## Decision table
 | Subtype | Choose for this case | Reject or switch when | Code example / 代码示例 |
 |---|---|---|---|
-| Load-more pending / 加载更多等待态 | Existing list stays visible while the next cursor page loads | Whole list is initial-loading | `footer status + disabled load-more control` |
-| Anchored scale-fade / 锚点缩放淡入 | Small menu/popover emerges from its trigger | Surface comes from a viewport edge or is unrelated to trigger | `transform origin derived from anchor placement` |
-| Content switcher / 内容切换器 | Alternate views of the same related content, such as grid/list or all/read/unread | Views are distinct information sections or routes | `<ContentSwitcher value="grid" />` |
 | Tabs / 标签页 | Distinct peer content panels within one information hierarchy | It is a binary setting, a form choice, or a mere style switch | `tablist`, `tab`, `tabpanel` |
 | Top navigation / 顶部导航 | Few global destinations; horizontal space is stable | Many nested destinations or admin-scale IA | `<nav aria-label="主导航">` |
 | Application header / 应用页头 | Shell combines identity, navigation trigger, search, and account actions | Only a list of destinations is needed | `<header><Logo/><PrimaryNav/><AccountMenu/></header>` |
@@ -37,22 +34,6 @@ This file defines exactly one component family. Select subtypes by destination s
 | Dismissible navigation drawer / 可收起导航抽屉 | Desktop/tablet navigation opens and closes while content reflows | Background must become inert or screen is narrow | `non-modal drawer + responsive layout` |
 
 ## Detailed variants
-
-### Load-more pending row — 加载更多等待行
-
-Use at the end of a list/feed while preserving already loaded items and scroll position.
-
-```tsx
-<><ItemList items={items} />{loadingMore&&<div role="status">正在加载更多…</div>}<button disabled={loadingMore||!hasMore} onClick={loadMore}>加载更多</button></>
-```
-
-### Anchored scale-and-fade — 锚点缩放淡入
-
-Use for a small popover/menu emerging from its trigger. Set transform origin from actual placement and preserve focus behavior.
-
-```tsx
-<Popover motion="scale-fade" transformOrigin="anchor" trigger={<button>更多</button>}><Actions /></Popover>
-```
 
 ### Mega menu — 大型菜单 / 超级菜单
 
@@ -172,14 +153,6 @@ Use three to five primary mobile destinations.
 
 ```tsx
 <nav aria-label="主要页面" className="fixed bottom-0"><a href="/home" aria-current="page">首页</a><a href="/inbox">消息</a><a href="/me">我的</a></nav>
-```
-
-### Content switcher — 内容切换器
-
-Use for alternate views of the same related content, such as grid/list or all/read/unread. Use tabs for distinct information sections and a switch for an immediate binary setting.
-
-```tsx
-<ContentSwitcher value={view} onValueChange={setView} options={[{value:'grid',label:'网格'},{value:'list',label:'列表'}]} />
 ```
 
 ### Navigation rail — 导航轨

@@ -112,6 +112,21 @@ Clarify timing, scope, persistence, urgency, actionability, and anchoring.
 - Are keyboard and accessible name/description relationships preserved?
 - Does the implementation reuse current project primitives and tokens?
 - Are motion and decoration subordinate to task completion?
+- For a greenfield screen, was an interaction inventory created before choosing a UI library?
+- Does each interaction route to one owning family while the page may compose several families?
+- Are virtualization and motion treated as strategies applied to base semantics rather than replacement component types?
+
+## Greenfield prompt recipe
+
+```text
+从 0 设计并实现该功能。先不要选择组件库。
+
+1. 把需求拆成独立交互，列出用户目标、结果类型（路由/视图/表单值/持久状态/命令）、值模型、数据规模、后果、等待方式和设备约束。
+2. 为每个交互选择唯一组件族和精确中英文子类型，并排除最接近的相邻类型。
+3. 输出组件决策表、状态所有权、弹层与焦点规则、loading/empty/error/success、响应式转换和验收条件。
+4. 完成语义蓝图后，再选择能覆盖这些行为的一套框架与组件库；原生元素足够时优先原生语义。
+5. 实现时不得改变已确定的值模型和交互语义。
+```
 
 ## Common terminology corrections
 

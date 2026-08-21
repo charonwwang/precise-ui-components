@@ -5,7 +5,6 @@ This file defines exactly one component family. Select subtypes by browse versus
 ## Decision table
 | Subtype | Choose for this case | Reject or switch when | Code example / 代码示例 |
 |---|---|---|---|
-| Recurrence editor / 重复规则编辑器 | Repeating schedules need frequency, interval, weekdays, end condition | One-off date/time | `recurrence form producing RRULE-like data` |
 | Carousel / 轮播 | Sequential visual browsing where only a subset is shown | Comparable data must be visible together; important content may be hidden | `manual controls, pause, slide status` |
 | Gallery / 画廊 | Multiple images are browsed and compared visually | Sequential storytelling is the main behavior | `responsive grid + lightbox` |
 | Video player / 视频播放器 | Video is primary media; controls/captions matter | Static animated decoration | `native video + captions/transcript` |
@@ -15,14 +14,6 @@ This file defines exactly one component family. Select subtypes by browse versus
 | Markdown editor / Markdown 编辑器 | Technical users need portable source plus preview | Nontechnical users should not see markup | `textarea/editor + preview` |
 
 ## Detailed variants
-
-### Recurrence editor — 重复规则编辑器
-
-Use for schedules with frequency, interval, weekdays, and an end condition. Always render a human-readable summary of the generated rule.
-
-```tsx
-<RecurrenceEditor value={rule} timezone="Asia/Shanghai" onChange={setRule} /><output>{summarizeRule(rule)}</output>
-```
 
 ### Image gallery — 图片画廊
 
