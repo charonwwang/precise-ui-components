@@ -43,13 +43,13 @@ npx @charonwwang/ui-spec install --target /absolute/path/ui-spec
 如果 npm Registry 暂时不可用，也可以直接执行 GitHub 上的最新版：
 
 ```bash
-npx --yes github:charonwwang/precise-ui-components install
+npx --yes github:charonwwang/ui-spec install
 ```
 
 ### 使用 Git 克隆
 
 ```bash
-git clone https://github.com/charonwwang/precise-ui-components.git ~/.codex/skills/ui-spec
+git clone https://github.com/charonwwang/ui-spec.git ~/.codex/skills/ui-spec
 ```
 
 克隆方式会包含 README、测试和 npm 安装器；npx 方式只把 Skill 运行时文件复制到本地 Skills 目录。

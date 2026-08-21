@@ -6,6 +6,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const test = require('node:test');
+const { version: packageVersion } = require('../package.json');
 
 const root = path.resolve(__dirname, '..');
 const cli = path.join(root, 'bin', 'ui-spec.js');
@@ -57,7 +58,7 @@ test('supports help, version, and rejects unknown commands', () => {
 
   const version = run('--version');
   assert.equal(version.status, 0);
-  assert.match(version.stdout, /^1\.1\.0\n$/);
+  assert.equal(version.stdout, `${packageVersion}\n`);
 
   const invalid = run('remove');
   assert.notEqual(invalid.status, 0);
