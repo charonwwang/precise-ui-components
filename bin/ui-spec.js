@@ -8,12 +8,13 @@ const path = require('node:path');
 
 const packageJson = require('../package.json');
 
-const SKILL_NAME = 'precise-ui-components';
+const SKILL_NAME = 'ui-spec';
+const LEGACY_SKILL_NAME = 'precise-ui-components';
 const SOURCE_ROOT = path.resolve(__dirname, '..');
 const RUNTIME_ENTRIES = ['SKILL.md', 'agents', 'references', 'scripts'];
 
 function printHelp() {
-  process.stdout.write(`Precise UI Components ${packageJson.version}\n\nUsage:\n  precise-ui-components install [--force] [--target <skill-directory>]\n  precise-ui-components --help\n  precise-ui-components --version\n\nOptions:\n  --force             Replace an existing installation after creating a backup.\n  --target <path>     Install to an explicit skill directory.\n                      Default: \${CODEX_HOME:-~/.codex}/skills/${SKILL_NAME}\n`);
+  process.stdout.write(`UI Spec ${packageJson.version}\n\nUsage:\n  ui-spec install [--force] [--target <skill-directory>]\n  ui-spec --help\n  ui-spec --version\n\nOptions:\n  --force             Replace an existing installation after creating a backup.\n  --target <path>     Install to an explicit skill directory.\n                      Default: \${CODEX_HOME:-~/.codex}/skills/${SKILL_NAME}\n`);
 }
 
 function parseArgs(argv) {
@@ -63,7 +64,7 @@ function copyRuntime(stage) {
   }
 
   const installedSkill = fs.readFileSync(path.join(stage, 'SKILL.md'), 'utf8');
-  if (!/^name:\s+precise-ui-components$/m.test(installedSkill)) {
+  if (!/^name:\s+ui-spec$/m.test(installedSkill)) {
     throw new Error('Package validation failed: SKILL.md has an unexpected name.');
   }
 }
@@ -72,7 +73,12 @@ function install(options) {
   const target = options.target || defaultTarget();
   const parent = path.dirname(target);
   const stage = path.join(parent, `.${SKILL_NAME}.install-${process.pid}-${Date.now()}`);
+  const backupRoot = options.target
+    ? path.join(parent, '.skill-backups')
+    : path.join(path.dirname(parent), 'skill-backups');
+  const legacyTarget = options.target ? undefined : path.join(parent, LEGACY_SKILL_NAME);
   let backup;
+  let backupSource;
 
   fs.mkdirSync(parent, { recursive: true });
 
@@ -84,21 +90,31 @@ function install(options) {
     fs.mkdirSync(stage);
     copyRuntime(stage);
 
-    if (fs.existsSync(target)) {
-      backup = `${target}.backup-${timestamp()}`;
-      fs.renameSync(target, backup);
+    if (fs.existsSync(target) || (legacyTarget && fs.existsSync(legacyTarget))) {
+      backupSource = fs.existsSync(target) ? target : legacyTarget;
+      fs.mkdirSync(backupRoot, { recursive: true });
+      backup = path.join(backupRoot, `${path.basename(backupSource)}.backup-${timestamp()}`);
+      fs.renameSync(backupSource, backup);
     }
 
     fs.renameSync(stage, target);
   } catch (error) {
     if (fs.existsSync(stage)) fs.rmSync(stage, { recursive: true, force: true });
-    if (backup && !fs.existsSync(target) && fs.existsSync(backup)) fs.renameSync(backup, target);
+    if (backup && backupSource && !fs.existsSync(backupSource) && fs.existsSync(backup)) {
+      fs.renameSync(backup, backupSource);
+    }
     throw error;
   }
 
   process.stdout.write(`Installed ${SKILL_NAME} ${packageJson.version}\nTarget: ${target}\n`);
   if (backup) process.stdout.write(`Backup: ${backup}\n`);
-  process.stdout.write('Restart Codex or start a new task, then invoke $precise-ui-components.\n');
+  if (legacyTarget && backupSource === legacyTarget) {
+    process.stdout.write(`Migrated: ${LEGACY_SKILL_NAME} -> ${SKILL_NAME}\n`);
+  }
+  if (legacyTarget && fs.existsSync(legacyTarget)) {
+    process.stdout.write(`Warning: legacy installation still exists at ${legacyTarget}.\n`);
+  }
+  process.stdout.write('Restart Codex or start a new task, then invoke $ui-spec.\n');
 }
 
 function main() {

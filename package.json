@@ -1,7 +1,7 @@
 {
-  "name": "precise-ui-components",
+  "name": "ui-spec",
   "version": "1.1.0",
-  "description": "Install the Precise UI Components Codex skill and choose frontend components with exact bilingual terminology.",
+  "description": "Install the UI Spec Codex skill and choose frontend components with exact bilingual terminology.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -10,6 +10,10 @@
   "homepage": "https://github.com/charonwwang/precise-ui-components#readme",
   "bugs": {
     "url": "https://github.com/charonwwang/precise-ui-components/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "codex",
@@ -20,7 +24,7 @@
     "accessibility"
   ],
   "bin": {
-    "precise-ui-components": "bin/precise-ui-components.js"
+    "ui-spec": "bin/ui-spec.js"
   },
   "files": [
     "SKILL.md",

@@ -1,4 +1,4 @@
-# Precise UI Components
+# UI Spec
 
 让 AI 不再把所有选择控件都叫“下拉框”。
 
@@ -14,16 +14,18 @@
 
 ### 使用 npx（推荐）
 
-直接从 GitHub 安装到 `${CODEX_HOME:-~/.codex}/skills/precise-ui-components`：
+从 npm Registry 运行安装器，默认安装到 `${CODEX_HOME:-~/.codex}/skills/ui-spec`：
 
 ```bash
-npx --yes github:charonwwang/precise-ui-components install
+npx ui-spec
 ```
+
+也可以显式写出安装子命令：`npx ui-spec install`。
 
 更新已有安装：
 
 ```bash
-npx --yes github:charonwwang/precise-ui-components install --force
+npx ui-spec install --force
 ```
 
 `--force` 不会直接删除旧版本。安装器会先把它移动到同级的时间戳备份目录，再原子地安装新版本，并在输出中显示备份位置。
@@ -31,17 +33,23 @@ npx --yes github:charonwwang/precise-ui-components install --force
 安装到自定义位置：
 
 ```bash
-npx --yes github:charonwwang/precise-ui-components install --target /absolute/path/precise-ui-components
+npx ui-spec install --target /absolute/path/ui-spec
 ```
 
-如果设置了 `CODEX_HOME`，默认目标会自动变为 `$CODEX_HOME/skills/precise-ui-components`。安装完成后，请重新启动 Codex 或新建任务，使 Skill 被重新发现。
+如果设置了 `CODEX_HOME`，默认目标会自动变为 `$CODEX_HOME/skills/ui-spec`。安装器发现旧的 `precise-ui-components` 时，会先把旧目录移出 Skills 扫描路径并保留备份，再安装 `ui-spec`。安装完成后，请重新启动 Codex 或新建任务，使 Skill 被重新发现。
 
-> 当前命令从 GitHub 仓库执行，不要求该包已发布到 npm Registry。
+### 直接从 GitHub 运行
+
+如果 npm Registry 暂时不可用，也可以直接执行 GitHub 上的最新版：
+
+```bash
+npx --yes github:charonwwang/precise-ui-components install
+```
 
 ### 使用 Git 克隆
 
 ```bash
-git clone https://github.com/charonwwang/precise-ui-components.git ~/.codex/skills/precise-ui-components
+git clone https://github.com/charonwwang/precise-ui-components.git ~/.codex/skills/ui-spec
 ```
 
 克隆方式会包含 README、测试和 npm 安装器；npx 方式只把 Skill 运行时文件复制到本地 Skills 目录。
@@ -51,7 +59,7 @@ git clone https://github.com/charonwwang/precise-ui-components.git ~/.codex/skil
 可以显式调用：
 
 ```text
-使用 $precise-ui-components，把“做一个可以搜索人员的下拉框”改写为精确组件规格，并按当前项目技术栈实现。
+使用 $ui-spec，把“做一个可以搜索人员的下拉框”改写为精确组件规格，并按当前项目技术栈实现。
 ```
 
 也可以直接描述界面需求；当请求涉及 dropdown、input、date picker、sidebar、modal、table、upload、progress、navigation 等容易混淆的组件时，Codex 可以自动选择这个 Skill。
@@ -141,7 +149,7 @@ npm run validate:catalog
 ## 仓库结构
 
 ```text
-precise-ui-components/
+ui-spec/
 ├── SKILL.md                         # Skill 入口与决策流程
 ├── agents/openai.yaml               # Codex 展示信息
 ├── references/
@@ -152,7 +160,7 @@ precise-ui-components/
 │   ├── feedback-overlays-data.md
 │   ├── layout-media-actions.md
 │   └── prompt-recipes.md
-├── bin/precise-ui-components.js     # npx 安装器
+├── bin/ui-spec.js                    # npx 安装器
 ├── scripts/validate_catalog.py      # 确定性目录校验
 └── tests/                            # 安装器、语义和跨框架测试
 ```

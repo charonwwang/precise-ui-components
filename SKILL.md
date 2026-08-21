@@ -1,9 +1,9 @@
 ---
-name: precise-ui-components
+name: ui-spec
 description: Translate vague UI requests into precise Chinese and English component terminology, choose the correct variant, and implement it in an existing frontend stack. Use for frontend component selection, UI specifications, AI coding prompts, design-to-code work, or when terms such as dropdown, input, date picker, sidebar, progress, modal, table, navigation, upload, or form are ambiguous.
 ---
 
-# Precise UI Components
+# UI Spec
 
 Turn product intent into an implementation-ready component specification, then implement it when requested.
 

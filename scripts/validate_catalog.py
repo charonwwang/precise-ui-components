@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic integrity checks for the precise UI component skill."""
+"""Deterministic integrity checks for the UI Spec skill."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def main() -> None:
     skill_text = SKILL.read_text(encoding="utf-8")
     matrix_text = MATRIX.read_text(encoding="utf-8")
 
-    if not re.search(r"^name:\s+precise-ui-components$", skill_text, re.M):
+    if not re.search(r"^name:\s+ui-spec$", skill_text, re.M):
         fail("SKILL.md name is missing or changed")
     if "references/component-decision-matrix.md" not in skill_text:
         fail("SKILL.md does not route ambiguous requests to the decision matrix")

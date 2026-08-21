@@ -1,6 +1,6 @@
 # Behavioral forward-test cases
 
-For every case, use `$precise-ui-components` and return:
+For every case, use `$ui-spec` and return:
 
 - selected Chinese and English subtype;
 - case facts that justify it;
