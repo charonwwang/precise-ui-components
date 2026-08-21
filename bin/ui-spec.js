@@ -9,7 +9,6 @@ const path = require('node:path');
 const packageJson = require('../package.json');
 
 const SKILL_NAME = 'ui-spec';
-const LEGACY_SKILL_NAME = 'precise-ui-components';
 const SOURCE_ROOT = path.resolve(__dirname, '..');
 const RUNTIME_ENTRIES = ['SKILL.md', 'agents', 'references', 'scripts'];
 
@@ -76,9 +75,7 @@ function install(options) {
   const backupRoot = options.target
     ? path.join(parent, '.skill-backups')
     : path.join(path.dirname(parent), 'skill-backups');
-  const legacyTarget = options.target ? undefined : path.join(parent, LEGACY_SKILL_NAME);
   let backup;
-  let backupSource;
 
   fs.mkdirSync(parent, { recursive: true });
 
@@ -90,30 +87,23 @@ function install(options) {
     fs.mkdirSync(stage);
     copyRuntime(stage);
 
-    if (fs.existsSync(target) || (legacyTarget && fs.existsSync(legacyTarget))) {
-      backupSource = fs.existsSync(target) ? target : legacyTarget;
+    if (fs.existsSync(target)) {
       fs.mkdirSync(backupRoot, { recursive: true });
-      backup = path.join(backupRoot, `${path.basename(backupSource)}.backup-${timestamp()}`);
-      fs.renameSync(backupSource, backup);
+      backup = path.join(backupRoot, `${path.basename(target)}.backup-${timestamp()}`);
+      fs.renameSync(target, backup);
     }
 
     fs.renameSync(stage, target);
   } catch (error) {
     if (fs.existsSync(stage)) fs.rmSync(stage, { recursive: true, force: true });
-    if (backup && backupSource && !fs.existsSync(backupSource) && fs.existsSync(backup)) {
-      fs.renameSync(backup, backupSource);
+    if (backup && !fs.existsSync(target) && fs.existsSync(backup)) {
+      fs.renameSync(backup, target);
     }
     throw error;
   }
 
   process.stdout.write(`Installed ${SKILL_NAME} ${packageJson.version}\nTarget: ${target}\n`);
   if (backup) process.stdout.write(`Backup: ${backup}\n`);
-  if (legacyTarget && backupSource === legacyTarget) {
-    process.stdout.write(`Migrated: ${LEGACY_SKILL_NAME} -> ${SKILL_NAME}\n`);
-  }
-  if (legacyTarget && fs.existsSync(legacyTarget)) {
-    process.stdout.write(`Warning: legacy installation still exists at ${legacyTarget}.\n`);
-  }
   process.stdout.write('Restart Codex or start a new task, then invoke $ui-spec.\n');
 }
 

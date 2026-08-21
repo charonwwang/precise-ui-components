@@ -36,7 +36,7 @@ npx ui-spec install --force
 npx ui-spec install --target /absolute/path/ui-spec
 ```
 
-如果设置了 `CODEX_HOME`，默认目标会自动变为 `$CODEX_HOME/skills/ui-spec`。安装器发现旧的 `precise-ui-components` 时，会先把旧目录移出 Skills 扫描路径并保留备份，再安装 `ui-spec`。安装完成后，请重新启动 Codex 或新建任务，使 Skill 被重新发现。
+如果设置了 `CODEX_HOME`，默认目标会自动变为 `$CODEX_HOME/skills/ui-spec`。安装完成后，请重新启动 Codex 或新建任务，使 Skill 被重新发现。
 
 ### 直接从 GitHub 运行
 

@@ -19,7 +19,6 @@ Date: 2026-08-21
 - First install creates `SKILL.md`, `agents/`, `references/`, and `scripts/` without copying repository-only tests or package metadata: PASS.
 - Installing over an existing target without `--force` fails and preserves the target: PASS.
 - `--force` moves the existing target to a timestamped backup before replacement: PASS.
-- The `precise-ui-components` legacy installation is moved to `$CODEX_HOME/skill-backups` before installing `ui-spec`, so Codex does not discover both names: PASS.
 - Help, version, unknown-command handling, package file allowlist, and executable mode: PASS.
 - Package dry run includes only the runtime, installer, README, license, and validation report; repository-only behavioral prompts and installer tests are excluded.
 
