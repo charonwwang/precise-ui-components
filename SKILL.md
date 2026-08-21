@@ -1,0 +1,51 @@
+---
+name: precise-ui-components
+description: Translate vague UI requests into precise Chinese and English component terminology, choose the correct variant, and implement it in an existing frontend stack. Use for frontend component selection, UI specifications, AI coding prompts, design-to-code work, or when terms such as dropdown, input, date picker, sidebar, progress, modal, table, navigation, upload, or form are ambiguous.
+---
+
+# Precise UI Components
+
+Turn product intent into an implementation-ready component specification, then implement it when requested.
+
+## Working method
+
+1. Inspect the repository before choosing syntax, packages, styling conventions, and design-system components. Reuse the existing stack and primitives.
+2. Resolve each vague noun to a precise component variant. State both Chinese and English names on first mention.
+3. Define behavior, data shape, states, validation, keyboard interaction, responsive behavior, and accessibility before visual polish.
+4. Distinguish components that are commonly confused. For example, a select chooses from known options; a combobox accepts text and may suggest options; a menu triggers actions; a date picker selects temporal values.
+5. Implement the smallest component that satisfies the interaction. Do not add animation, nesting, search, multi-select, or remote loading unless the request or data warrants it.
+6. Verify normal, empty, loading, error, disabled, overflow, keyboard, and narrow-screen states in proportion to the task.
+
+## Output contract
+
+When the user asks for terminology or a prompt, return:
+
+- `组件 / Component`: canonical Chinese and English term.
+- `变体 / Variant`: the exact subtype.
+- `使用场景`: why this variant fits and which nearby variant does not.
+- `交互规格`: trigger, selection model, dismissal, focus, keyboard, validation, async behavior.
+- `视觉规格`: placement, width, density, hierarchy, truncation, responsive behavior, motion only if useful.
+- `状态`: default, hover, focus-visible, active/selected, disabled, loading, empty, error, success.
+- `实现映射`: existing project primitive or a semantic HTML/React fallback.
+
+When the user asks for implementation, keep the specification concise and make the code the primary deliverable.
+
+## Reference routing
+
+- Read [references/selection-and-input.md](references/selection-and-input.md) for dropdowns, selects, comboboxes, text inputs, toggles, sliders, and form controls.
+- Read [references/date-time-and-navigation.md](references/date-time-and-navigation.md) for date/time controls, sidebars, menus, tabs, breadcrumbs, pagination, steppers, and command navigation.
+- Read [references/feedback-overlays-data.md](references/feedback-overlays-data.md) for progress/loading, alerts, toast, modal, drawer, tooltip, popover, table, list, tree, cards, and data visualization shells.
+- Read [references/layout-media-actions.md](references/layout-media-actions.md) for buttons, layout, disclosure, media, upload, editors, and supporting UI primitives.
+- Read [references/prompt-recipes.md](references/prompt-recipes.md) when rewriting a vague request into a high-precision AI coding prompt or reviewing one for ambiguity.
+
+Reference snippets express behavior, not a mandatory framework. Adapt them to the repository rather than introducing React or a new component library into a different stack.
+
+## Quality boundaries
+
+- Prefer native semantic elements when they meet the behavior. Do not recreate buttons, links, checkboxes, radio buttons, or simple selects with generic `div` elements.
+- Use the established design system's accessibility contract. For custom composites, follow the corresponding ARIA pattern and preserve visible focus.
+- Labels are persistent names; placeholders are examples or format hints, never label replacements.
+- Use a tooltip for supplemental explanation, a popover for interactive lightweight content, a menu for actions, and a dialog for a focused task.
+- Use determinate progress only when a meaningful value is known. Never fabricate percentages for unknown-duration work.
+- Do not call every floating panel a dropdown. Name the trigger, panel role, selection model, and dismissal behavior.
+- Do not copy video wording blindly. Correct obvious transcription errors and prefer established industry terms while retaining the user's intended visual behavior.

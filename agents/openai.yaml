@@ -1,0 +1,4 @@
+interface:
+  display_name: "精准 UI 组件"
+  short_description: "用中英文精确术语选择、描述、实现和验收常用前端 UI 组件"
+  default_prompt: "使用 $precise-ui-components 把我的界面需求改写为精确组件规格并实现。"
