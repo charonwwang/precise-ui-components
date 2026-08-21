@@ -80,6 +80,16 @@ Use a link for navigation and a button for an in-place action.
 <ResizablePanelGroup direction="horizontal"><ResizablePanel defaultSize={30}><Tree /></ResizablePanel><ResizeHandle /><ResizablePanel><Editor /></ResizablePanel></ResizablePanelGroup>
 ```
 
+### Resizable inline side panel — 可调整行内侧面板
+
+Use when supplemental details or filters must remain beside an interactive main canvas and the user benefits from allocating width. It is an inline layout region, not an overlay drawer. A narrow-screen fallback may reuse the same content inside an overlay drawer.
+
+```tsx
+<ResizablePanelGroup direction="horizontal"><ResizablePanel><Chart /></ResizablePanel><ResizeHandle aria-label="调整筛选面板宽度" /><ResizablePanel defaultSize={28} minSize={20}><aside aria-label="筛选详情"><FilterFields /></aside></ResizablePanel></ResizablePanelGroup>
+```
+
+Keep one canonical filter model across desktop and mobile renderings. The resize handle needs pointer and keyboard operation, visible focus, and usable minimum/maximum sizes.
+
 ### Grid — 网格布局
 
 ```tsx
@@ -276,4 +286,54 @@ Never rely on color alone.
 
 ```tsx
 <span className="sr-only">在新窗口打开</span>
+```
+
+## Guidance and discovery components
+
+### Toggletip — 可点击提示
+
+Use a button-triggered lightweight explanation when hover-only tooltip behavior is insufficient or the content contains a link. Use a popover for richer controls.
+
+```tsx
+<Toggletip trigger={<button aria-label="了解税率计算">?</button>}><p>税率按账单地址计算。</p><a href="/tax">了解更多</a></Toggletip>
+```
+
+### Coach mark — 教学提示
+
+Use for one targeted first-use explanation. It must be dismissible and should not repeatedly interrupt returning users.
+
+```tsx
+<CoachMark targetRef={exportButtonRef} open={!seenExportHint} onDismiss={rememberHint} title="导出报表">可选择 CSV 或 XLSX。</CoachMark>
+```
+
+### Product tour — 产品导览
+
+Use for an ordered walkthrough across several interface targets. Provide skip, previous, next, finish, and a way to replay it later.
+
+```tsx
+<Tour open={tourOpen} steps={tourSteps} current={step} onStepChange={setStep} onSkip={finishTour} onFinish={finishTour} />
+```
+
+### Overflow menu — 溢出菜单
+
+Use for low-frequency contextual actions that do not fit in a row, card, or toolbar. Keep the primary action visible.
+
+```tsx
+<Menu trigger={<button aria-label="更多操作">•••</button>}><MenuItem onSelect={duplicate}>复制</MenuItem><MenuItem onSelect={archive}>归档</MenuItem></Menu>
+```
+
+### QR code — 二维码
+
+Use for machine scanning or cross-device transfer. Always include a human-readable fallback such as the URL and copy action.
+
+```tsx
+<figure><QRCode value={url} /><figcaption><a href={url}>{url}</a><button onClick={()=>copy(url)}>复制链接</button></figcaption></figure>
+```
+
+### Watermark — 水印
+
+Use for classification or ownership marking without blocking content. It must be non-interactive and preserve contrast/readability.
+
+```tsx
+<Watermark text="内部资料" aria-hidden><DocumentContent /></Watermark>
 ```

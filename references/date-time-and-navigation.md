@@ -243,3 +243,45 @@ Use three to five primary mobile destinations.
 ```tsx
 <nav aria-label="主要页面" className="fixed bottom-0"><a href="/home" aria-current="page">首页</a><a href="/inbox">消息</a><a href="/me">我的</a></nav>
 ```
+
+## Additional temporal and navigation variants
+
+### Duration input — 时长输入
+
+Use for elapsed quantities rather than a time of day. Store one canonical unit and derive the grouped display.
+
+```tsx
+<DurationInput valueSeconds={duration} units={['hours','minutes']} onValueChange={setDuration} />
+```
+
+### Recurrence editor — 重复规则编辑器
+
+Use for schedules with frequency, interval, weekdays, and an end condition. Always render a human-readable summary of the generated rule.
+
+```tsx
+<RecurrenceEditor value={rule} timezone="Asia/Shanghai" onChange={setRule} /><output>{summarizeRule(rule)}</output>
+```
+
+### Content switcher — 内容切换器
+
+Use for alternate views of the same related content, such as grid/list or all/read/unread. Use tabs for distinct information sections and a switch for an immediate binary setting.
+
+```tsx
+<ContentSwitcher value={view} onValueChange={setView} options={[{value:'grid',label:'网格'},{value:'list',label:'列表'}]} />
+```
+
+### Navigation rail — 导航轨
+
+Use a compact persistent rail for a small set of high-level desktop/tablet destinations. It is not a collapsed deep tree; labels must remain discoverable.
+
+```tsx
+<nav aria-label="主导航" className="navigation-rail">{routes.map(r=><a href={r.href} aria-current={r.active?'page':undefined}><r.icon aria-hidden /><span>{r.label}</span></a>)}</nav>
+```
+
+### Table pagination — 表格分页栏
+
+Use when a data table needs item count, page size, and sequential page controls. Keep it attached below the table; use page-link pagination for route navigation.
+
+```tsx
+<TablePagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} onPageSizeChange={setPageSize} />
+```

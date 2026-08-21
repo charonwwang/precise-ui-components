@@ -168,6 +168,30 @@ A wide navigation panel with grouped destinations, descriptions, or promotions. 
 <form role="search" onSubmit={submit}><label className="sr-only" htmlFor="q">搜索</label><input id="q" type="search" value={q} onChange={e=>setQ(e.target.value)} /><button>搜索</button></form>
 ```
 
+### Global search — 全局搜索
+
+Searches across the whole product or site and usually routes to a unified results experience. State the searchable entity types and keep the query in the URL when results are navigable/shareable.
+
+```tsx
+<form role="search" action="/search"><label className="sr-only" htmlFor="global-q">全局搜索</label><input id="global-q" name="q" type="search" placeholder="搜索文档、用户和项目" /><button>搜索</button></form>
+```
+
+### Page search — 页面搜索
+
+Searches within one page domain, such as all audit events on the audit page. Do not call it global search merely because it sends a server request.
+
+```tsx
+<form role="search" onSubmit={searchAuditEvents}><label htmlFor="audit-q">搜索审计事件</label><input id="audit-q" type="search" value={query} onChange={e=>setQuery(e.target.value)} /><button>搜索</button></form>
+```
+
+### Component/table search — 组件内搜索
+
+Filters or retrieves results for one labelled table, list, or tree. Place it in that component's toolbar and announce result-count changes when filtering is asynchronous.
+
+```tsx
+<section aria-labelledby="orders-title"><h2 id="orders-title">订单</h2><div role="search"><label htmlFor="order-q">搜索当前订单</label><input id="order-q" type="search" value={query} onChange={filterOrders} /></div><OrdersTable rows={visibleRows} /></section>
+```
+
 ### Textarea — 多行文本框
 
 ```tsx
@@ -258,3 +282,53 @@ Changes an immediately effective boolean setting. Use a checkbox when values are
 - `character counter / 字数计数`: use an output; avoid noisy live announcements on every keystroke.
 - `read-only / 只读`: focusable/selectable value that cannot change; distinct from disabled.
 - `disabled / 禁用`: unavailable action; explain why nearby when the reason is not obvious.
+
+## Additional specialized controls
+
+### Datalist — 原生建议列表
+
+Use for lightweight native suggestions when custom values remain valid. Do not promise the rendering or async behavior of a fully controlled combobox.
+
+```tsx
+<label>浏览器<input list="browsers" value={browser} onChange={e=>setBrowser(e.target.value)} /></label><datalist id="browsers"><option value="Chrome" /><option value="Firefox" /></datalist>
+```
+
+### Tri-state checkbox — 三态复选框
+
+Use the mixed state only for a parent that summarizes partially selected children; it is not a third user answer.
+
+```tsx
+<input ref={el=>{if(el) el.indeterminate=selectedCount>0&&selectedCount<total}} type="checkbox" checked={selectedCount===total} onChange={toggleAll} aria-label="选择全部成员" />
+```
+
+### Mentions input — 提及输入框
+
+Use when free text contains inserted entities triggered by `@`, `#`, or another prefix. Persist stable entity IDs separately from display labels when references must survive renames.
+
+```tsx
+<Mentions value={text} prefix={["@","#"]} options={suggestions} onSearch={loadEntities} onChange={setText} />
+```
+
+### Color picker — 颜色选择器
+
+Use a native picker for simple color entry; use a custom picker only when exact formats, alpha, swatches, or contrast preview are required.
+
+```tsx
+<label>品牌色<input type="color" value={color} onChange={e=>setColor(e.target.value)} /></label><output>{color}</output>
+```
+
+### Rating — 评分控件
+
+Use for a small ordinal scale such as 1–5. State whether half values, clearing, and read-only display are allowed; provide textual labels for each value.
+
+```tsx
+<Rating value={rating} count={5} labels={['很差','较差','一般','满意','很好']} onValueChange={setRating} />
+```
+
+### Query builder — 查询构建器
+
+Use only for expert users who must combine fields, operators, nested groups, and `AND`/`OR`. Prefer a filter bar for ordinary filtering.
+
+```tsx
+<QueryBuilder fields={fields} value={rules} operators={operators} onChange={setRules} maxDepth={3} />
+```

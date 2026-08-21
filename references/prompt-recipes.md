@@ -21,6 +21,11 @@ Use only fields that change the result:
 状态：默认、hover、focus-visible、selected、disabled、loading、empty、error。
 约束：复用现有组件库和设计 token；不新增依赖；适配窄屏；保持语义 HTML 与无障碍名称。
 验收：列出并验证关键交互，不只完成静态外观。
+
+组件判定：
+- 选择的子类：...
+- 关键 case 事实：...
+- 排除的相邻子类及原因：...
 ```
 
 ## Vague-to-precise examples
@@ -65,6 +70,38 @@ Select feedback by information availability and layout stability.
 删除操作使用 destructive alert dialog，不是普通 toast。标题明确对象名，正文说明不可恢复；默认焦点放在“取消”，确认按钮文案为“删除项目”；确认期间按钮显示 loading 并防重复提交；成功后关闭并把焦点移到合理位置，失败则保持对话框并显示行内错误。
 ```
 
+### “展示一批数据”
+
+Clarify one-dimensional versus tabular versus hierarchical structure, read-only versus interactive cells, comparison needs, and scale.
+
+```text
+实现可排序、可勾选的数据表格（interactive data table），不是 data grid。数据为扁平订单记录，用户按列比较、排序并批量选择行，但不做单元格编辑、复制粘贴或方向键逐格导航。使用原生 table 语义；全选复选框支持 mixed 状态；批量操作只在选中行后出现；分页栏固定在表格下方。
+```
+
+### “显示一个百分比”
+
+Clarify task completion versus a measured scalar versus a business KPI.
+
+```text
+使用 meter/gauge 展示存储使用率，不使用 progress bar。该值是已知范围 0–100 内的当前占用量，不代表正在进行的任务；设置 70/90 阈值并同时显示“已用 82 GB / 100 GB”的文本，颜色不能是唯一状态信号。
+```
+
+### “切换几个页面内容”
+
+Clarify distinct sections versus alternate views versus form values.
+
+```text
+使用内容切换器（content switcher）在“网格”和“列表”两种展示方式之间切换，因为它们是同一结果集的等价视图；不使用 tabs（不是不同信息分区）、switch（不是即时开关设置）或 radio group（不是待提交的表单答案）。切换后保留筛选条件和滚动上下文。
+```
+
+### “给用户一个提示”
+
+Clarify timing, scope, persistence, urgency, actionability, and anchoring.
+
+```text
+保存成功使用无操作 toast/status，3 秒后消失；字段错误使用字段下方 inline validation；导入格式说明使用不可关闭的 contextual callout；付款方式过期使用 persistent actionable inline notification 并提供一个“更新”操作。不要把四种信息统一做成 toast。
+```
+
 ## Review checklist
 
 - Does the name describe role rather than appearance alone?
@@ -88,6 +125,11 @@ Select feedback by information availability and layout stability.
 | 按钮组 | button group, segmented control, radio group, toolbar, or split button | Selection and action semantics differ. |
 | 侧边栏 | persistent sidebar, collapsible rail, multi-level sidebar, off-canvas navigation, or drawer | Layout and responsive behavior differ. |
 | 日期框 | date input, date picker, date range picker, calendar, or date-time picker | Granularity and selection count differ. |
+| 百分比条 | task progress, meter/gauge, KPI, quota, or step progress | Completion, scalar measurement, and business status are different data models. |
+| 卡片 | base, clickable, selectable, expandable, KPI, media, or action card | Whole-card behavior and nested controls differ. |
+| 搜索 | global, page, component/table, autocomplete, command palette, or filter | Scope and submitted result differ. |
+| 提示 | field validation, tooltip, toggletip, callout, toast, inline notification, banner, alert, or tour | Timing, persistence, urgency, and actionability differ. |
+| 表格 | semantic table, interactive data table, data grid, treegrid, structured list, or virtualized collection | Reading, comparison, cell interaction, and hierarchy differ. |
 
 ## Source calibration
 

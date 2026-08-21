@@ -307,3 +307,105 @@ Always provide title, units, legend when needed, and a textual/table alternative
 ```tsx
 <figure><figcaption>近 7 日请求量（次）</figcaption><LineChart data={series} aria-hidden /><DataTable className="sr-only" data={series} /></figure>
 ```
+
+## Additional feedback and measurement variants
+
+### Meter / gauge — 计量表
+
+Use for a read-only scalar within a known range, such as storage, battery, or score. It is not task progress.
+
+```tsx
+<label>存储使用量 <meter min={0} max={100} low={60} high={85} optimum={0} value={usedPercent}>{usedPercent}%</meter></label>
+```
+
+### Status message — 状态消息
+
+Use a polite live region for background outcomes that should be announced without interrupting the user.
+
+```tsx
+<p role="status" aria-live="polite">{saveState==='saved'?'已自动保存':''}</p>
+```
+
+### Actionable notification — 可操作通知
+
+Use a persistent inline or toast-style message with one clear follow-up action. If resolution needs several controls, link to a page or dialog.
+
+```tsx
+<Notification persistent tone="warning" title="付款方式即将过期" action={<a href="/billing">更新</a>} />
+```
+
+### Callout — 说明提示块
+
+Use persistent contextual guidance that loads with the page before a user acts. It is not success/error feedback and is not dismissible.
+
+```tsx
+<aside className="callout" aria-label="导入说明"><strong>导入前请确认</strong><p>CSV 第一行必须包含字段名。</p><a href="/docs/import">查看格式</a></aside>
+```
+
+### Notification center — 通知中心
+
+Use when messages require history, unread state, filtering, or later action; a toast alone cannot provide revisitability.
+
+```tsx
+<NotificationCenter items={notifications} filter={filter} onMarkRead={markRead} onOpenItem={openNotification} />
+```
+
+## Additional data structures
+
+### Structured list — 结构化列表
+
+Use repeated row layouts with secondary fields when content is primarily read-only or navigational. Switch to a table when column comparison and headers become essential.
+
+```tsx
+<ul className="structured-list">{services.map(s=><li><a href={`/services/${s.id}`}><strong>{s.name}</strong><span>{s.region}</span><Badge>{s.status}</Badge></a></li>)}</ul>
+```
+
+### Data grid — 数据网格
+
+Use for spreadsheet-like interactive cells, selection, editing, copy/paste, and arrow-key navigation. Do not apply grid semantics to a merely sortable table.
+
+```tsx
+<DataGrid rows={rows} columns={columns} editable selectionMode="cell" onCellsChange={updateCells} />
+```
+
+### Virtualized data grid — 虚拟化数据网格
+
+Use only when both spreadsheet-like grid interaction and large-data windowing are required. Virtualization is an implementation strategy, so it must not weaken the grid's cell focus, editing, selection, or announced row/column position.
+
+```tsx
+<VirtualizedDataGrid rows={rows} columns={columns} rowKey="id" editable overscan={8} aria-rowcount={rows.length} onCellsChange={updateCells} />
+```
+
+Reject this for a large read-only dataset that only needs row sorting/filtering; that remains a virtualized table.
+
+### Treegrid — 树形数据网格
+
+Use when hierarchical rows also have comparable columns or editable cells. Use a tree for hierarchy without columns and a data grid for flat rows.
+
+```tsx
+<TreeGrid rows={hierarchicalRows} columns={columns} expandedIds={expanded} onExpandedChange={setExpanded} />
+```
+
+### Clickable card — 可点击卡片
+
+Use when the entire card navigates to one destination and contains no independent nested actions.
+
+```tsx
+<article className="card"><a className="stretched-link" href={`/projects/${p.id}`}><h3>{p.name}</h3><p>{p.summary}</p></a></article>
+```
+
+### Selectable card — 可选择卡片
+
+Use for visually rich options such as plans. Preserve radio semantics for single selection and checkbox semantics for multiple selection.
+
+```tsx
+<label className="selectable-card"><input type="radio" name="plan" value={plan.id} checked={value===plan.id} onChange={()=>setValue(plan.id)} /><PlanSummary plan={plan} /></label>
+```
+
+### Expandable card — 可展开卡片
+
+Use to reveal secondary information inline. If the card contains other actions, give expansion its own button instead of making the whole surface ambiguous.
+
+```tsx
+<article><header><h3>{title}</h3><button aria-expanded={open} onClick={()=>setOpen(!open)}>详情</button></header>{open&&<CardDetails />}</article>
+```

@@ -1,0 +1,42 @@
+{
+  "name": "precise-ui-components",
+  "version": "1.1.0",
+  "description": "Install the Precise UI Components Codex skill and choose frontend components with exact bilingual terminology.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charonwwang/precise-ui-components.git"
+  },
+  "homepage": "https://github.com/charonwwang/precise-ui-components#readme",
+  "bugs": {
+    "url": "https://github.com/charonwwang/precise-ui-components/issues"
+  },
+  "keywords": [
+    "codex",
+    "codex-skill",
+    "frontend",
+    "ui-components",
+    "design-system",
+    "accessibility"
+  ],
+  "bin": {
+    "precise-ui-components": "bin/precise-ui-components.js"
+  },
+  "files": [
+    "SKILL.md",
+    "agents",
+    "references",
+    "scripts",
+    "bin",
+    "tests/RESULTS.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test tests/install-cli.test.js",
+    "validate:catalog": "python3 scripts/validate_catalog.py"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

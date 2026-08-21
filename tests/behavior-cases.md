@@ -1,0 +1,30 @@
+# Behavioral forward-test cases
+
+For every case, use `$precise-ui-components` and return:
+
+- selected Chinese and English subtype;
+- case facts that justify it;
+- at least two rejected sibling variants with reasons;
+- the exact skill reference file and heading used;
+- a concise implementation cue.
+
+Do not implement a full application.
+
+## Cases
+
+1. “员工约两千人。输入姓名或工号搜索，最终只能提交已有员工的 `userId`，不能新增自由文本。”
+2. “给城市输入框提供北京、上海等建议，但用户仍然可以填写候选列表之外的小城市；不需要自定义候选项样式。”
+3. “后台权限页要选择多个成员，左右两侧始终分别看见未选和已选项，并支持批量移动。”
+4. “同一批照片需要在网格视图和列表视图之间切换，筛选条件不能丢失；它不是页面导航。”
+5. “展示 8,000 行财务数据，用户需要用方向键逐格移动、编辑单元格并复制粘贴。”
+6. “展示部门树，同时每个部门还有预算、人数、负责人三列，而且负责人单元格可编辑。”
+7. “显示对象存储已使用 82 GB / 100 GB，并在超过 90 GB 时告警；当前没有上传任务。”
+8. “文件上传接口能返回 uploadedBytes 和 totalBytes，需要显示真实完成比例。”
+9. “CSV 导入页在用户选择文件之前，需要一直展示不可关闭的格式说明和文档链接。”
+10. “付款方式将在 7 天后过期，消息必须保留到用户处理或关闭，并提供一个‘更新’操作。”
+11. “移动端商品详情页需要从底部弹出分享渠道；用户可以下滑关闭，必须处理安全区。”
+12. “桌面数据分析页右侧长期显示筛选详情，同时用户仍需操作主图表，并可拖动改变两侧宽度。”
+13. “价格套餐用三张信息丰富的卡片展示，只能选择一张作为待提交的套餐。”
+14. “第一次使用导出功能时，只解释导出按钮这一个功能；用户关闭后以后不再自动出现。”
+15. “专家筛选器允许添加多条字段-操作符-值规则，支持 AND/OR 和最多三层嵌套。”
+16. “搜索整个产品的文档、用户和项目并进入统一结果页；不是过滤当前表格。”
