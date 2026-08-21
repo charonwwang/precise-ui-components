@@ -11,7 +11,7 @@ Turn product intent into an implementation-ready component specification, then i
 
 1. Inspect the repository before choosing syntax, packages, styling conventions, and design-system components. Determine the actual framework, version, UI library, form/state conventions, router, styling system, SSR boundary, and test setup. Reuse the existing stack and primitives.
 2. Resolve each vague noun to a precise component variant. State both Chinese and English names on first mention.
-3. For an ambiguous family, read the decision matrix first. Select with explicit axes: user goal, value model, information structure, interaction weight, persistence, data volume, and device context.
+3. For an ambiguous family, read the component index, route to exactly one family file, and select with its explicit decision axes. Load a second family only when the case genuinely crosses semantic boundaries.
 4. Record the selected subtype and the closest rejected alternatives with one-line reasons. This prevents visual similarity from overriding semantics.
 5. Define behavior, data shape, states, validation, keyboard interaction, responsive behavior, and accessibility before visual polish.
 6. Implement the smallest component that satisfies the interaction. Do not add animation, nesting, search, multi-select, or remote loading unless the request or data warrants it.
@@ -34,16 +34,12 @@ When the user asks for implementation, keep the specification concise and make t
 
 ## Reference routing
 
-- Read [references/component-decision-matrix.md](references/component-decision-matrix.md) first when the user gives a vague component family, when two or more variants could fit, or when reviewing whether an existing component is the right pattern.
+- Read [references/component-index.md](references/component-index.md) first when the family itself is unclear. It is routing-only and contains no component definitions.
+- After routing, read exactly the matching file under `references/components/`. Each file owns one component family, its decision axes, bilingual subtypes, rejection rules, and corresponding code examples.
 - Read [references/framework-adaptation.md](references/framework-adaptation.md) before implementation when a repository is present, a framework/library is named, or code must work across different frontend environments.
-- Read [references/selection-and-input.md](references/selection-and-input.md) for dropdowns, selects, comboboxes, text inputs, toggles, sliders, and form controls.
-- Read [references/date-time-and-navigation.md](references/date-time-and-navigation.md) for date/time controls, sidebars, menus, tabs, breadcrumbs, pagination, steppers, and command navigation.
-- Read [references/feedback-overlays-data.md](references/feedback-overlays-data.md) for progress/loading, alerts, toast, modal, drawer, tooltip, popover, table, list, tree, cards, and data visualization shells.
-- Read [references/layout-media-actions.md](references/layout-media-actions.md) for buttons, layout, disclosure, media, upload, editors, and supporting UI primitives.
-- Read [references/navigation.md](references/navigation.md) when navigation scope, route versus view switching, responsive shell placement, hierarchy, or history behavior is ambiguous.
-- Read [references/overlays.md](references/overlays.md) when choosing among tooltip, toggletip, popover, menu, selection popup, dialog, drawer, sheet, lightbox, and other floating surfaces.
-- Read [references/motion-and-loading.md](references/motion-and-loading.md) when specifying expand/collapse, enter/exit, page/view transitions, reduced motion, or loading feedback by scope and progress knowledge.
-- Read [references/prompt-recipes.md](references/prompt-recipes.md) when rewriting a vague request into a high-precision AI coding prompt or reviewing one for ambiguity.
+- Read [references/prompt-recipes.md](references/prompt-recipes.md) only when rewriting a vague request into a high-precision AI coding prompt or reviewing one for ambiguity.
+
+Do not search a retired combined catalog. Navigation, overlays, disclosure, motion, loading, forms, layout, and every other family have separate authoritative files.
 
 Reference snippets express behavior, not a mandatory framework. Adapt them to the repository rather than introducing React or a new component library into a different stack.
 

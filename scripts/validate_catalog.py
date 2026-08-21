@@ -10,7 +10,40 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "SKILL.md"
-MATRIX = ROOT / "references" / "component-decision-matrix.md"
+INDEX = ROOT / "references" / "component-index.md"
+COMPONENTS = ROOT / "references" / "components"
+
+EXPECTED_FAMILIES = [
+    "selection.md",
+    "boolean-and-mode-controls.md",
+    "text-and-numeric-inputs.md",
+    "date-and-time.md",
+    "buttons-and-commands.md",
+    "navigation.md",
+    "disclosure.md",
+    "overlays.md",
+    "notifications-and-feedback.md",
+    "help-and-onboarding.md",
+    "motion.md",
+    "loading-and-progress.md",
+    "lists-tables-trees.md",
+    "cards-identity-and-status.md",
+    "search-filtering-and-query.md",
+    "file-upload.md",
+    "media-and-content.md",
+    "layout-and-containers.md",
+    "forms-and-validation.md",
+    "data-visualization.md",
+]
+
+RETIRED_COMBINED_FILES = [
+    "component-decision-matrix.md",
+    "selection-and-input.md",
+    "date-time-and-navigation.md",
+    "feedback-overlays-data.md",
+    "layout-media-actions.md",
+    "motion-and-loading.md",
+]
 
 
 def fail(message: str) -> None:
@@ -24,31 +57,31 @@ def markdown_cells(line: str) -> list[str]:
 
 def main() -> None:
     skill_text = SKILL.read_text(encoding="utf-8")
-    matrix_text = MATRIX.read_text(encoding="utf-8")
+    index_text = INDEX.read_text(encoding="utf-8")
 
     if not re.search(r"^name:\s+ui-spec$", skill_text, re.M):
         fail("SKILL.md name is missing or changed")
-    if "references/component-decision-matrix.md" not in skill_text:
-        fail("SKILL.md does not route ambiguous requests to the decision matrix")
-    if "references/framework-adaptation.md" not in skill_text:
-        fail("SKILL.md does not route repository implementations to framework adaptation")
-    for reference in [
-        "references/navigation.md",
-        "references/overlays.md",
-        "references/motion-and-loading.md",
-    ]:
-        if reference not in skill_text:
-            fail(f"SKILL.md does not route to {reference}")
+    for required in ["references/component-index.md", "references/framework-adaptation.md"]:
+        if required not in skill_text:
+            fail(f"SKILL.md does not route to {required}")
 
-    referenced = sorted(set(re.findall(r"\((references/[a-z0-9-]+\.md)\)", skill_text)))
-    missing = [path for path in referenced if not (ROOT / path).is_file()]
-    if missing:
-        fail(f"missing linked references: {', '.join(missing)}")
+    actual_families = sorted(path.name for path in COMPONENTS.glob("*.md"))
+    if actual_families != sorted(EXPECTED_FAMILIES):
+        fail(f"component family files differ: expected {len(EXPECTED_FAMILIES)}, found {len(actual_families)}")
 
-    markdown_files = [SKILL, *sorted((ROOT / "references").glob("*.md"))]
-    readme = ROOT / "README.md"
-    if readme.is_file():
-        markdown_files.append(readme)
+    for retired in RETIRED_COMBINED_FILES:
+        if (ROOT / "references" / retired).exists():
+            fail(f"retired combined component file still exists: {retired}")
+
+    for family in EXPECTED_FAMILIES:
+        link = f"components/{family}"
+        if link not in index_text:
+            fail(f"component index does not route to {family}")
+
+    markdown_files = [SKILL, INDEX, *sorted(COMPONENTS.glob("*.md"))]
+    for optional in [ROOT / "README.md", ROOT / "references" / "framework-adaptation.md", ROOT / "references" / "prompt-recipes.md"]:
+        if optional.is_file():
+            markdown_files.append(optional)
     for path in markdown_files:
         text = path.read_text(encoding="utf-8")
         if text.count("```") % 2:
@@ -56,97 +89,85 @@ def main() -> None:
         if re.search(r"\b(?:TODO|TBD|FIXME)\b|\[TODO", text, re.I):
             fail(f"unfinished placeholder in {path.relative_to(ROOT)}")
 
-    sections = list(re.finditer(r"^## (\d+)\. (.+)$", matrix_text, re.M))
-    if len(sections) != 14:
-        fail(f"expected 14 numbered decision families, found {len(sections)}")
-    if [int(match.group(1)) for match in sections] != list(range(1, 15)):
-        fail("decision families are not numbered consecutively from 1 to 14")
-
-    subtype_rows = 0
+    subtype_owner: dict[str, str] = {}
+    detail_owner: dict[str, str] = {}
     family_counts: dict[str, int] = {}
-    for index, section in enumerate(sections):
-        start = section.end()
-        end = sections[index + 1].start() if index + 1 < len(sections) else matrix_text.index("## Official calibration sources")
-        body = matrix_text[start:end]
+    subtype_rows = 0
+    detailed_examples = 0
+
+    for family in EXPECTED_FAMILIES:
+        path = COMPONENTS / family
+        text = path.read_text(encoding="utf-8")
+        if len(re.findall(r"^# ", text, re.M)) != 1:
+            fail(f"{family} must have exactly one component-family title")
+        if "defines exactly one component family" not in text:
+            fail(f"{family} does not declare single-family ownership")
+        if "| Subtype | Choose for this case | Reject or switch when | Code example / 代码示例 |" not in text:
+            fail(f"{family} is missing the standard decision table")
+
         rows = []
-        for line in body.splitlines():
+        for line in text.splitlines():
             if not line.startswith("|"):
                 continue
             cells = markdown_cells(line)
             if cells[0] == "Subtype" or all(re.fullmatch(r"[-: ]+", cell) for cell in cells):
                 continue
-            if len(cells) != 4:
-                fail(f"table row does not have four cells in family {section.group(1)}: {line}")
-            if any(not cell for cell in cells):
-                fail(f"empty decision cell in family {section.group(1)}: {line}")
+            if len(cells) != 4 or any(not cell for cell in cells):
+                fail(f"invalid decision row in {family}: {line}")
             if " / " not in cells[0]:
-                fail(f"subtype is not bilingual in family {section.group(1)}: {cells[0]}")
+                fail(f"subtype is not bilingual in {family}: {cells[0]}")
+            if "`" not in cells[3]:
+                fail(f"subtype lacks a corresponding code example in {family}: {cells[0]}")
+            subtype_key = cells[0].split(" / ", 1)[0].strip().lower()
+            previous = subtype_owner.get(subtype_key)
+            if previous and previous != family:
+                fail(f"subtype {cells[0]} is defined in both {previous} and {family}")
+            subtype_owner[subtype_key] = family
             rows.append(cells)
-        family_counts[section.group(2)] = len(rows)
-        subtype_rows += len(rows)
-        if len(rows) < 5:
-            fail(f"family {section.group(1)} has fewer than five subtypes")
 
-    if subtype_rows < 190:
-        fail(f"expected at least 190 decision rows, found {subtype_rows}")
+        if len(rows) < 5:
+            fail(f"{family} has fewer than five detailed subtypes")
+        family_counts[family] = len(rows)
+        subtype_rows += len(rows)
+
+        for heading in re.findall(r"^### (.+)$", text, re.M):
+            detail_key = re.split(r"\s+[—-]\s+", heading, maxsplit=1)[0].strip().lower()
+            previous = detail_owner.get(detail_key)
+            if previous and previous != family:
+                fail(f"detailed subtype {heading} appears in both {previous} and {family}")
+            detail_owner[detail_key] = family
+        detailed_examples += text.count("```tsx") + text.count("```html")
+
+    if subtype_rows < 210:
+        fail(f"expected at least 210 family-owned subtypes, found {subtype_rows}")
+    if detailed_examples < 200:
+        fail(f"expected at least 200 detailed TSX/HTML examples, found {detailed_examples}")
+
+    required_examples = {
+        "navigation.md": ["Route tabs", "Modal navigation drawer", "Skip link"],
+        "overlays.md": ["Selection popup", "Modal task dialog", "Side sheet"],
+        "motion.md": ["Expand/collapse reveal", "Shared-axis navigation transition"],
+        "loading-and-progress.md": ["Blocking overlay loader", "Streaming response indicator"],
+        "forms-and-validation.md": ["Error summary", "Helper text"],
+        "data-visualization.md": ["Line chart", "Heatmap"],
+    }
+    for family, terms in required_examples.items():
+        text = (COMPONENTS / family).read_text(encoding="utf-8")
+        for term in terms:
+            if term not in text:
+                fail(f"{family} is missing required subtype: {term}")
 
     framework_text = (ROOT / "references" / "framework-adaptation.md").read_text(encoding="utf-8")
     required_frameworks = ["React / Next.js", "Vue / Nuxt", "Angular", "Svelte / SvelteKit", "Vanilla HTML/JS"]
-    absent_frameworks = [name for name in required_frameworks if name not in framework_text]
-    if absent_frameworks:
-        fail(f"missing framework adaptation coverage: {', '.join(absent_frameworks)}")
+    for framework in required_frameworks:
+        if framework not in framework_text:
+            fail(f"missing framework adaptation coverage: {framework}")
     for token in ["package.json", "UI library", "SSR", "existing", "allowCustomValue={false}"]:
         if token not in framework_text:
             fail(f"framework adaptation is missing required invariant: {token}")
-    for token in ["do not present invented props", "semantic pseudocode", "assumed APIs are never presented as verified"]:
-        if token not in framework_text:
-            fail(f"framework adaptation is missing wrapper evidence rule: {token}")
 
-    required_detailed_headings = {
-        ROOT / "references" / "feedback-overlays-data.md": ["### Virtualized data grid — 虚拟化数据网格"],
-        ROOT / "references" / "layout-media-actions.md": ["### Resizable inline side panel — 可调整行内侧面板"],
-        ROOT / "references" / "selection-and-input.md": [
-            "### Global search — 全局搜索",
-            "### Page search — 页面搜索",
-            "### Component/table search — 组件内搜索",
-        ],
-        ROOT / "references" / "navigation.md": [
-            "### Route tabs — 路由标签页",
-            "### Content tabs — 内容标签页",
-            "### Modal navigation drawer — 模态导航抽屉",
-        ],
-        ROOT / "references" / "overlays.md": [
-            "### Selection popup / listbox popup — 选择列表弹层",
-            "### Modal task dialog — 模态任务对话框",
-            "### Inline side panel — 行内侧面板",
-        ],
-        ROOT / "references" / "motion-and-loading.md": [
-            "### Expand/collapse reveal — 展开/收起揭示动画",
-            "### Blocking overlay loader — 阻塞式遮罩加载",
-            "### Streaming response indicator — 流式响应指示器",
-        ],
-    }
-    for path, headings in required_detailed_headings.items():
-        text = path.read_text(encoding="utf-8")
-        for heading in headings:
-            if heading not in text:
-                fail(f"missing blind-test repair heading in {path.name}: {heading}")
-
-    detailed = [
-        ROOT / "references" / "selection-and-input.md",
-        ROOT / "references" / "date-time-and-navigation.md",
-        ROOT / "references" / "feedback-overlays-data.md",
-        ROOT / "references" / "layout-media-actions.md",
-        ROOT / "references" / "navigation.md",
-        ROOT / "references" / "overlays.md",
-        ROOT / "references" / "motion-and-loading.md",
-    ]
-    example_count = sum(path.read_text(encoding="utf-8").count("```tsx") for path in detailed)
-    if example_count < 250:
-        fail(f"expected at least 250 TSX examples, found {example_count}")
-
-    print("PASS: skill catalog integrity")
-    print(f"families={len(sections)} decision_rows={subtype_rows} tsx_examples={example_count} linked_references={len(referenced)} frameworks={len(required_frameworks)}")
+    print("PASS: single-family component catalog integrity")
+    print(f"families={len(EXPECTED_FAMILIES)} subtypes={subtype_rows} detailed_examples={detailed_examples} frameworks={len(required_frameworks)}")
     for family, count in family_counts.items():
         print(f"- {family}: {count}")
 

@@ -106,28 +106,34 @@ Skill 的回答会尽量包含：
 3. 被排除的相邻子类型及原因；
 4. 值模型、键盘、无障碍和异步状态要求；
 5. 与当前项目一致的实现方式和代码；
-6. 所引用的决策矩阵或详细组件条目。
+6. 所引用的单一组件族文件及详细条目。
 
 ## 能力范围
 
-组件决策矩阵目前覆盖 14 个家族、194 个可判定子类型，并提供 259 个对应 TSX/HTML 行为示例：
+组件目录目前拆分为 20 个单一归属的组件族文件、217 个可判定子类型，并提供 239 个详细 TSX/HTML 行为示例。每个子类型的决策行还包含对应代码或语义伪代码：
 
 | 家族 | 典型精确子类型 |
 |---|---|
 | 选择与建议 | Native select、Searchable select、Editable combobox、Datalist、Cascader、Tree select、Transfer list |
 | 布尔与模式 | Checkbox、Tri-state checkbox、Switch、Radio group、Segmented control、Content switcher |
-| 输入 | Text field、Currency input、OTP、Mentions、Tag input、Rating、Query builder |
+| 文本与数值输入 | Text field、Currency input、OTP、Mentions、Tag input、Rating、Slider |
 | 日期与时间 | Date picker、Date range、Month/Week picker、Time picker、Duration、Recurrence rule |
-| 操作 | Primary/Destructive/Icon button、Split button、Overflow menu、Command palette |
+| 按钮与命令 | Primary/Destructive/Icon button、Split button、Overflow menu、Context menu |
 | 导航 | Global/Local nav、Route/Content/Workspace tabs、Breadcrumb、Back link、Tree nav、Navigation drawer/rail、Pagination、Stepper、Skip link |
-| 展开与动效 | Disclosure、Accordion、Expand/collapse reveal、Crossfade、Anchored scale-fade、Edge slide、Shared axis、Container transform、Layout reorder |
+| 展开收起 | Disclosure、Single/Multi-open accordion、Collapsible panel、Show more、Expandable row |
 | 浮层 | Tooltip、Toggletip、Hover card、Popover、Action/Selection/Picker popup、Modal/Non-modal/Full-screen dialog、Drawer、Side/Bottom sheet、Lightbox |
-| 通知与引导 | Toast、Inline alert、Banner、Callout、Actionable notification、Coach mark、Product tour |
-| 进度与加载 | Pending button、Inline/Region/Route loading、Skeleton、Blocking loader、Optimistic pending、Background sync、Streaming、Per-item queue |
-| 数据展示 | Semantic list、Data table、Data grid、Virtualized data grid、Tree view、Treegrid、Timeline |
+| 通知反馈 | Toast、Inline alert、Banner、Callout、Actionable notification、Status、Result page |
+| 帮助引导 | Contextual help、Coach mark、Product tour、Help link、Empty-state guidance |
+| 动效转场 | Expand/collapse reveal、Crossfade、Anchored scale-fade、Edge slide、Shared axis、Container transform、Layout reorder |
+| 加载进度 | Pending button、Inline/Region/Route loading、Skeleton、Blocking loader、Optimistic pending、Background sync、Streaming |
+| 列表表格树 | Semantic list、Data table、Data grid、Virtualized data grid、Tree view、Treegrid、Timeline |
 | 卡片与身份 | Base/Clickable/Selectable/Expandable card、Avatar group、Badge、Status indicator |
 | 搜索与筛选 | Global/Page/Component search、Filter bar、Faceted filter、Advanced filter、Query builder |
-| 上传与媒体 | File input、Dropzone、Upload queue、Gallery、Carousel、Media player、Editor、QR code |
+| 文件上传 | File input、Dropzone、Upload queue、Image crop uploader、Attachment list |
+| 媒体内容 | Gallery、Carousel、Video/Audio player、Rich text/Markdown/Code editor、QR code |
+| 布局容器 | App shell、Grid、Stack、Masonry、Split view、Resizable panel、Scroll area、Sticky region |
+| 表单校验 | Form、Field、Fieldset、Inline validation、Error summary、Helper text、Form actions |
+| 数据可视化 | Line/Bar/Pie/Scatter chart、Heatmap、Sparkline、Gauge、Chart shell |
 
 ## 跨框架适配
 
@@ -179,16 +185,30 @@ ui-spec/
 ├── SKILL.md                         # Skill 入口与决策流程
 ├── agents/openai.yaml               # Codex 展示信息
 ├── references/
-│   ├── component-decision-matrix.md # 194 个子类型的选择/排除矩阵
+│   ├── component-index.md           # 只负责路由，不存放跨族组件明细
 │   ├── framework-adaptation.md      # 跨框架和项目适配
-│   ├── selection-and-input.md
-│   ├── date-time-and-navigation.md
-│   ├── feedback-overlays-data.md
-│   ├── layout-media-actions.md
-│   ├── navigation.md               # 导航范围、层级、路由与响应式决策
-│   ├── overlays.md                 # 锚定、模态性、任务重量与关闭方式
-│   ├── motion-and-loading.md       # 展开动画、转场、加载范围与等待反馈
-│   └── prompt-recipes.md
+│   ├── prompt-recipes.md            # 通用规格模板，不拥有组件定义
+│   └── components/
+│       ├── selection.md
+│       ├── boolean-and-mode-controls.md
+│       ├── text-and-numeric-inputs.md
+│       ├── date-and-time.md
+│       ├── buttons-and-commands.md
+│       ├── navigation.md
+│       ├── disclosure.md
+│       ├── overlays.md
+│       ├── notifications-and-feedback.md
+│       ├── help-and-onboarding.md
+│       ├── motion.md
+│       ├── loading-and-progress.md
+│       ├── lists-tables-trees.md
+│       ├── cards-identity-and-status.md
+│       ├── search-filtering-and-query.md
+│       ├── file-upload.md
+│       ├── media-and-content.md
+│       ├── layout-and-containers.md
+│       ├── forms-and-validation.md
+│       └── data-visualization.md
 ├── bin/ui-spec.js                    # npx 安装器
 ├── scripts/validate_catalog.py      # 确定性目录校验
 └── tests/                            # 安装器、语义和跨框架测试

@@ -48,7 +48,11 @@ test('installs, refuses accidental overwrite, and performs backup upgrade', t =>
   const backup = backupLine.slice('Backup: '.length);
   assert.equal(fs.readFileSync(path.join(backup, 'local-marker.txt'), 'utf8'), 'preserve in backup');
   assert.ok(!fs.existsSync(path.join(target, 'local-marker.txt')));
-  assert.ok(fs.existsSync(path.join(target, 'references', 'component-decision-matrix.md')));
+  assert.ok(fs.existsSync(path.join(target, 'references', 'component-index.md')));
+  assert.ok(fs.existsSync(path.join(target, 'references', 'components', 'navigation.md')));
+  assert.ok(fs.existsSync(path.join(target, 'references', 'components', 'overlays.md')));
+  assert.ok(fs.existsSync(path.join(target, 'references', 'components', 'motion.md')));
+  assert.ok(fs.existsSync(path.join(target, 'references', 'components', 'loading-and-progress.md')));
 
   const doctor = run('doctor', '--target', target);
   assert.equal(doctor.status, 0, doctor.stderr);

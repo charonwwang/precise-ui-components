@@ -6,9 +6,11 @@ Date: 2026-08-21
 
 - Official `skill-creator` validator: PASS.
 - Catalog integrity validator: PASS.
-- Decision families: 14.
-- Decision rows: 194.
-- Detailed TSX/HTML behavior examples: 259.
+- Single-owner component families: 20.
+- Family-owned subtype rows: 217.
+- Detailed TSX/HTML behavior examples: 239.
+- Every subtype row includes a corresponding code example or labelled semantic implementation cue.
+- Retired mixed-family reference files are absent, and duplicate subtype ownership across family files fails validation.
 - Framework mappings: React/Next.js, Vue/Nuxt, Angular, Svelte/SvelteKit, and Vanilla HTML/JS.
 - Source and installed `SKILL.md`/references: byte-for-byte equivalent after synchronization.
 
@@ -37,7 +39,7 @@ An independent agent read the installed skill and the 16 prompts in `behavior-ca
 - Cases with ambiguous input facts: 0.
 - Each answer included decision facts, at least two rejected siblings, an exact reference heading, and an implementation cue.
 - The first pass exposed three documentation-addressability gaps: virtualized data grid, resizable inline side panel, and detailed global search guidance.
-- After adding dedicated matrix rows and detailed headings, targeted regression cases 5, 12, and 16 passed 3/3 with no remaining skill gap.
+- After adding dedicated family rows and detailed headings, targeted regression cases 5, 12, and 16 passed 3/3 with no remaining skill gap.
 
 ## Independent cross-framework forward test
 
