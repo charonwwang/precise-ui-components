@@ -11,9 +11,10 @@ const packageJson = require('../package.json');
 const SKILL_NAME = 'ui-spec';
 const SOURCE_ROOT = path.resolve(__dirname, '..');
 const RUNTIME_ENTRIES = ['SKILL.md', 'agents', 'references', 'scripts'];
+const DISTRIBUTION_ONLY_ENTRIES = ['README.md', 'LICENSE', 'package.json', 'bin', 'tests'];
 
 function printHelp() {
-  process.stdout.write(`UI Spec ${packageJson.version}\n\nUsage:\n  ui-spec install [--force] [--target <skill-directory>]\n  ui-spec --help\n  ui-spec --version\n\nOptions:\n  --force             Replace an existing installation after creating a backup.\n  --target <path>     Install to an explicit skill directory.\n                      Default: \${CODEX_HOME:-~/.codex}/skills/${SKILL_NAME}\n`);
+  process.stdout.write(`UI Spec ${packageJson.version}\n\nUsage:\n  ui-spec install [--force] [--target <skill-directory>]\n  ui-spec doctor [--target <skill-directory>]\n  ui-spec --help\n  ui-spec --version\n\nOptions:\n  --force             Replace an existing installation after creating a backup.\n  --target <path>     Install or inspect an explicit skill directory.\n                      Default: \${CODEX_HOME:-~/.codex}/skills/${SKILL_NAME}\n`);
 }
 
 function parseArgs(argv) {
@@ -107,13 +108,38 @@ function install(options) {
   process.stdout.write('Restart Codex or start a new task, then invoke $ui-spec.\n');
 }
 
+function doctor(options) {
+  const target = options.target || defaultTarget();
+  if (!fs.existsSync(target)) {
+    throw new Error(`Skill is not installed at ${target}. Run ui-spec install first.`);
+  }
+
+  const missing = RUNTIME_ENTRIES.filter(entry => !fs.existsSync(path.join(target, entry)));
+  if (missing.length) {
+    throw new Error(`Installed Skill is incomplete at ${target}. Missing: ${missing.join(', ')}.`);
+  }
+
+  const skillText = fs.readFileSync(path.join(target, 'SKILL.md'), 'utf8');
+  if (!/^name:\s+ui-spec$/m.test(skillText)) {
+    throw new Error(`SKILL.md at ${target} does not declare name: ui-spec.`);
+  }
+
+  const distributionFiles = DISTRIBUTION_ONLY_ENTRIES.filter(entry => fs.existsSync(path.join(target, entry)));
+  if (distributionFiles.length) {
+    throw new Error(`Found distribution-only files in the Skill runtime: ${distributionFiles.join(', ')}. Install with npx instead of cloning the repository into the skills directory.`);
+  }
+
+  process.stdout.write(`Valid Codex Skill runtime\nName: ${SKILL_NAME}\nTarget: ${target}\nEntries: ${RUNTIME_ENTRIES.join(', ')}\n`);
+}
+
 function main() {
   try {
     const options = parseArgs(process.argv.slice(2));
     if (options.command === 'help') return printHelp();
     if (options.command === 'version') return process.stdout.write(`${packageJson.version}\n`);
-    if (options.command !== 'install') throw new Error(`Unknown command: ${options.command}`);
-    install(options);
+    if (options.command === 'install') return install(options);
+    if (options.command === 'doctor') return doctor(options);
+    throw new Error(`Unknown command: ${options.command}`);
   } catch (error) {
     process.stderr.write(`Error: ${error.message}\n`);
     process.exitCode = 1;

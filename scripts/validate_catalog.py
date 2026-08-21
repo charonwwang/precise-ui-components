@@ -32,6 +32,13 @@ def main() -> None:
         fail("SKILL.md does not route ambiguous requests to the decision matrix")
     if "references/framework-adaptation.md" not in skill_text:
         fail("SKILL.md does not route repository implementations to framework adaptation")
+    for reference in [
+        "references/navigation.md",
+        "references/overlays.md",
+        "references/motion-and-loading.md",
+    ]:
+        if reference not in skill_text:
+            fail(f"SKILL.md does not route to {reference}")
 
     referenced = sorted(set(re.findall(r"\((references/[a-z0-9-]+\.md)\)", skill_text)))
     missing = [path for path in referenced if not (ROOT / path).is_file()]
@@ -80,8 +87,8 @@ def main() -> None:
         if len(rows) < 5:
             fail(f"family {section.group(1)} has fewer than five subtypes")
 
-    if subtype_rows < 130:
-        fail(f"expected at least 130 decision rows, found {subtype_rows}")
+    if subtype_rows < 190:
+        fail(f"expected at least 190 decision rows, found {subtype_rows}")
 
     framework_text = (ROOT / "references" / "framework-adaptation.md").read_text(encoding="utf-8")
     required_frameworks = ["React / Next.js", "Vue / Nuxt", "Angular", "Svelte / SvelteKit", "Vanilla HTML/JS"]
@@ -103,6 +110,21 @@ def main() -> None:
             "### Page search — 页面搜索",
             "### Component/table search — 组件内搜索",
         ],
+        ROOT / "references" / "navigation.md": [
+            "### Route tabs — 路由标签页",
+            "### Content tabs — 内容标签页",
+            "### Modal navigation drawer — 模态导航抽屉",
+        ],
+        ROOT / "references" / "overlays.md": [
+            "### Selection popup / listbox popup — 选择列表弹层",
+            "### Modal task dialog — 模态任务对话框",
+            "### Inline side panel — 行内侧面板",
+        ],
+        ROOT / "references" / "motion-and-loading.md": [
+            "### Expand/collapse reveal — 展开/收起揭示动画",
+            "### Blocking overlay loader — 阻塞式遮罩加载",
+            "### Streaming response indicator — 流式响应指示器",
+        ],
     }
     for path, headings in required_detailed_headings.items():
         text = path.read_text(encoding="utf-8")
@@ -115,10 +137,13 @@ def main() -> None:
         ROOT / "references" / "date-time-and-navigation.md",
         ROOT / "references" / "feedback-overlays-data.md",
         ROOT / "references" / "layout-media-actions.md",
+        ROOT / "references" / "navigation.md",
+        ROOT / "references" / "overlays.md",
+        ROOT / "references" / "motion-and-loading.md",
     ]
     example_count = sum(path.read_text(encoding="utf-8").count("```tsx") for path in detailed)
-    if example_count < 100:
-        fail(f"expected at least 100 TSX examples, found {example_count}")
+    if example_count < 250:
+        fail(f"expected at least 250 TSX examples, found {example_count}")
 
     print("PASS: skill catalog integrity")
     print(f"families={len(sections)} decision_rows={subtype_rows} tsx_examples={example_count} linked_references={len(referenced)} frameworks={len(required_frameworks)}")

@@ -7,8 +7,8 @@ Date: 2026-08-21
 - Official `skill-creator` validator: PASS.
 - Catalog integrity validator: PASS.
 - Decision families: 14.
-- Decision rows: 155.
-- Detailed TSX/HTML behavior examples: 181.
+- Decision rows: 194.
+- Detailed TSX/HTML behavior examples: 259.
 - Framework mappings: React/Next.js, Vue/Nuxt, Angular, Svelte/SvelteKit, and Vanilla HTML/JS.
 - Source and installed `SKILL.md`/references: byte-for-byte equivalent after synchronization.
 
@@ -20,6 +20,7 @@ Date: 2026-08-21
 - Installing over an existing target without `--force` fails and preserves the target: PASS.
 - `--force` moves the existing target to a timestamped backup before replacement: PASS.
 - Help, version, unknown-command handling, package file allowlist, and executable mode: PASS.
+- `doctor` accepts the minimal installed runtime and rejects a full distribution repository placed directly in the Skills directory: PASS.
 - Package dry run includes only the runtime, installer, README, license, and validation report; repository-only behavioral prompts and installer tests are excluded.
 
 Run locally:

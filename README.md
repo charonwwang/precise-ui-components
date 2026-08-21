@@ -8,6 +8,25 @@
 
 > 可搜索单选选择器 / Searchable single-select combobox。输入只负责查询，最终必须提交已有员工的 `userId`，禁止自由文本；不应使用允许任意值的 autocomplete，也不应使用仅执行命令的 menu。
 
+## 这是标准 Skill 吗？
+
+是，但需要区分两个目录：
+
+- GitHub/npm 仓库是“发布源码”，除了标准 Skill 运行时，还包含 README、npm 安装器和测试；
+- `npx` 安装到 `~/.codex/skills/ui-spec` 的才是“标准运行时 Skill”，只包含 Codex 会加载的入口和按需参考资料。
+
+标准安装结果如下：
+
+```text
+~/.codex/skills/ui-spec/
+├── SKILL.md
+├── agents/openai.yaml
+├── references/
+└── scripts/
+```
+
+`SKILL.md` 是必需入口；`agents/`、`references/`、`scripts/` 是标准可选资源目录。不要把整个 GitHub 发布仓库直接克隆到 `~/.codex/skills`，否则 README、`package.json`、`bin/` 和 `tests/` 也会混入运行时目录。
+
 ## 安装
 
 需要 Node.js 18 或更高版本。
@@ -38,6 +57,12 @@ npx @charonwwang/ui-spec install --target /absolute/path/ui-spec
 
 如果设置了 `CODEX_HOME`，默认目标会自动变为 `$CODEX_HOME/skills/ui-spec`。安装完成后，请重新启动 Codex 或新建任务，使 Skill 被重新发现。
 
+验证本机目录是否为标准 Skill 运行时：
+
+```bash
+npx @charonwwang/ui-spec doctor
+```
+
 ### 直接从 GitHub 运行
 
 如果 npm Registry 暂时不可用，也可以直接执行 GitHub 上的最新版：
@@ -46,13 +71,14 @@ npx @charonwwang/ui-spec install --target /absolute/path/ui-spec
 npx --yes github:charonwwang/ui-spec install
 ```
 
-### 使用 Git 克隆
+### 从 GitHub 源码安装
 
 ```bash
-git clone https://github.com/charonwwang/ui-spec.git ~/.codex/skills/ui-spec
+git clone https://github.com/charonwwang/ui-spec.git ui-spec-source
+node ui-spec-source/bin/ui-spec.js install
 ```
 
-克隆方式会包含 README、测试和 npm 安装器；npx 方式只把 Skill 运行时文件复制到本地 Skills 目录。
+源码保留在普通开发目录，安装器只把标准 Skill 运行时复制到 `~/.codex/skills/ui-spec`。
 
 ## 使用方式
 
@@ -84,7 +110,7 @@ Skill 的回答会尽量包含：
 
 ## 能力范围
 
-组件决策矩阵目前覆盖 14 个家族、155 个子类型：
+组件决策矩阵目前覆盖 14 个家族、194 个可判定子类型，并提供 259 个对应 TSX/HTML 行为示例：
 
 | 家族 | 典型精确子类型 |
 |---|---|
@@ -93,11 +119,11 @@ Skill 的回答会尽量包含：
 | 输入 | Text field、Currency input、OTP、Mentions、Tag input、Rating、Query builder |
 | 日期与时间 | Date picker、Date range、Month/Week picker、Time picker、Duration、Recurrence rule |
 | 操作 | Primary/Destructive/Icon button、Split button、Overflow menu、Command palette |
-| 导航 | Tabs、Breadcrumbs、Pagination、Sidebar、Navigation rail、Stepper、Anchor navigation |
-| 展开与布局 | Disclosure、Accordion、Split view、Resizable panels、Resizable inline side panel |
-| 浮层 | Tooltip、Toggletip、Popover、Menu、Dialog、Drawer、Bottom sheet、Lightbox |
+| 导航 | Global/Local nav、Route/Content/Workspace tabs、Breadcrumb、Back link、Tree nav、Navigation drawer/rail、Pagination、Stepper、Skip link |
+| 展开与动效 | Disclosure、Accordion、Expand/collapse reveal、Crossfade、Anchored scale-fade、Edge slide、Shared axis、Container transform、Layout reorder |
+| 浮层 | Tooltip、Toggletip、Hover card、Popover、Action/Selection/Picker popup、Modal/Non-modal/Full-screen dialog、Drawer、Side/Bottom sheet、Lightbox |
 | 通知与引导 | Toast、Inline alert、Banner、Callout、Actionable notification、Coach mark、Product tour |
-| 进度与度量 | Determinate/Indeterminate progress、Spinner、Skeleton、Meter、Step progress |
+| 进度与加载 | Pending button、Inline/Region/Route loading、Skeleton、Blocking loader、Optimistic pending、Background sync、Streaming、Per-item queue |
 | 数据展示 | Semantic list、Data table、Data grid、Virtualized data grid、Tree view、Treegrid、Timeline |
 | 卡片与身份 | Base/Clickable/Selectable/Expandable card、Avatar group、Badge、Status indicator |
 | 搜索与筛选 | Global/Page/Component search、Filter bar、Faceted filter、Advanced filter、Query builder |
@@ -153,12 +179,15 @@ ui-spec/
 ├── SKILL.md                         # Skill 入口与决策流程
 ├── agents/openai.yaml               # Codex 展示信息
 ├── references/
-│   ├── component-decision-matrix.md # 155 个子类型的选择/排除矩阵
+│   ├── component-decision-matrix.md # 194 个子类型的选择/排除矩阵
 │   ├── framework-adaptation.md      # 跨框架和项目适配
 │   ├── selection-and-input.md
 │   ├── date-time-and-navigation.md
 │   ├── feedback-overlays-data.md
 │   ├── layout-media-actions.md
+│   ├── navigation.md               # 导航范围、层级、路由与响应式决策
+│   ├── overlays.md                 # 锚定、模态性、任务重量与关闭方式
+│   ├── motion-and-loading.md       # 展开动画、转场、加载范围与等待反馈
 │   └── prompt-recipes.md
 ├── bin/ui-spec.js                    # npx 安装器
 ├── scripts/validate_catalog.py      # 确定性目录校验

@@ -110,21 +110,33 @@ Return the decision in this compact form:
 | Subtype | Choose for this case | Reject or switch when | Implementation cue |
 |---|---|---|---|
 | Top navigation / 顶部导航 | Few global destinations; horizontal space is stable | Many nested destinations or admin-scale IA | `<nav aria-label="主导航">` |
+| Application header / 应用页头 | Shell combines identity, navigation trigger, search, and account actions | Only a list of destinations is needed | `<header><Logo/><PrimaryNav/><AccountMenu/></header>` |
 | Persistent sidebar / 常驻侧边栏 | Desktop app with many destinations; navigation should remain visible | Narrow mobile screen or task needs maximum width | `<aside><nav>…` |
 | Collapsible sidebar / 可折叠侧边栏 | Desktop density varies; icons remain recognizable in rail state | Labels are essential and icons ambiguous | expanded sidebar + labeled navigation rail |
 | Navigation rail / 导航轨 | Three to seven high-level destinations in compact desktop/tablet layout | Deep hierarchy | narrow persistent nav with icons and labels/tooltips |
 | Off-canvas navigation / 滑入导航 | Mobile or narrow screen; navigation is temporarily overlaid | Navigation must coexist with content | modal/overlay drawer from left |
+| Dismissible navigation drawer / 可收起导航抽屉 | Desktop/tablet navigation opens and closes while content reflows | Background must become inert or screen is narrow | non-modal drawer + responsive layout |
 | Multi-level sidebar / 多级侧边栏 | Complex hierarchy with parent groups | Only a few destinations or hierarchy is shallow | disclosures inside nav |
 | Mega menu / 大型菜单 | Many discoverable destinations grouped under a global category | Commands or form values | wide navigation panel with grouped links |
+| Bottom navigation / 底部导航栏 | Three to five top-level mobile destinations need thumb reach | Contextual actions or many destinations | bottom `nav` with current link |
+| Local section navigation / 局部分区导航 | Sibling routes belong to one product area beneath global navigation | Views are in-memory panels on one route | labelled secondary `nav` |
 | Breadcrumb / 面包屑 | Current location sits inside a hierarchy; users may jump upward | Sequence is process progress rather than location | ordered navigation links |
+| Back link / 返回链接 | Clear parent or previous context matters, especially in master-detail flows | Users need arbitrary sibling access | stable parent URL or defined history action |
+| Tree navigation / 树形导航 | Deep irregular destination hierarchy expands by branch | Nodes set a form value or tabular columns matter | tree inside labelled navigation region |
 | Pagination nav / 页码导航 | Users need random access, stable URLs, and bounded result pages | Stream is exploratory or data changes rapidly | page links with current page |
 | Table pagination / 表格分页栏 | Data table needs page size, item count, previous/next, possibly direct page | SEO/route navigation is the primary goal | pagination attached below table |
 | Cursor/load more / 游标分页或加载更多 | Backend uses cursor; order may change; sequential continuation is enough | Users need arbitrary page jumps | explicit “加载更多” button |
 | Infinite scroll / 无限滚动 | Exploratory feed and uninterrupted browsing | Goal-oriented search, comparison, footer access, or return-to-position risk | observer plus accessible load-more fallback |
 | Stepper/wizard / 步骤条或向导 | Ordered task with discrete stages and a current step | Passive task completion percentage | ordered steps with `aria-current="step"` |
 | Anchor navigation / 锚点目录 | Long single page with stable sections | Destinations are separate pages | same-page fragment links |
+| Skip link / 跳过导航链接 | Keyboard users need to bypass repeated shell content | There is no repeated block before main content | focus-visible fragment link to `main` |
+| Route tabs / 路由标签页 | Peer sections have stable URLs, history, and deep links | Panels switch only local in-memory content | links styled as tabs, `aria-current="page"` |
+| Content tabs / 内容标签页 | Peer panels switch within one page context | Stable URLs and browser history matter | APG tablist/tab/tabpanel pattern |
+| Workspace tabs / 工作区标签 | Multiple open documents require activate, close, dirty, reorder, and overflow states | Ordinary page sections are being switched | document tab strip with stable IDs |
+| Previous-next navigation / 上一项下一项导航 | Known ordered content needs sequential movement | Random page access is important | `rel="prev"` and `rel="next"` links |
+| Footer sitemap navigation / 页脚站点地图 | Broad informational site benefits from redundant grouped discovery | It would replace the primary navigation | grouped links in labelled footer `nav` |
 
-## 7. Disclosure and view organization
+## 7. Disclosure, view organization, and transition motion
 
 | Subtype | Choose for this case | Reject or switch when | Implementation cue |
 |---|---|---|---|
@@ -136,6 +148,14 @@ Return the decision in this compact form:
 | Resizable panels / 可调分栏 | Users benefit from allocating space between persistent panes | Layout should be fixed or touch simplicity matters | window splitter with keyboard support |
 | Resizable inline side panel / 可调整行内侧面板 | Supplemental content must coexist with the main canvas and users need to allocate width | The panel may cover content, is temporary, or does not need resizing | persistent side pane + keyboard-operable separator; responsive overlay fallback |
 | Carousel / 轮播 | Sequential visual browsing where only a subset is shown | Comparable data must be visible together; important content may be hidden | manual controls, pause, slide status |
+| Expand-collapse reveal / 展开收起揭示动画 | Disclosure content changes height and the spatial reveal aids comprehension | Motion adds no information or reduced motion is requested | `aria-expanded` + grid/clip reveal, no hard-coded height |
+| Fade transition / 淡入淡出 | Low-spatiality status, scrim, or decoration changes visibility | Users need to understand an origin or direction | opacity transition with reduced-motion fallback |
+| Crossfade replacement / 交叉淡化切换 | Peer content replaces content in one stable container | Forward/back direction or object continuity matters | keyed crossfade inside stable region |
+| Anchored scale-fade / 锚点缩放淡入 | Small menu/popover emerges from its trigger | Surface comes from a viewport edge or is unrelated to trigger | transform origin derived from anchor placement |
+| Edge slide transition / 边缘滑入滑出 | Drawer/sheet enters from the edge where it conceptually lives | Direction has no spatial meaning | translate from the actual placement edge |
+| Shared-axis transition / 共享轴切换 | Ordered peer views or wizard steps have forward/back direction | Views are unrelated or motion would distract | directional transition keyed by step |
+| Container transform / 容器变换 | Visible card/object expands into its own detail surface | Source and destination do not share identity | morph from stable source ID to detail container |
+| Layout-reorder transition / 布局重排动画 | Insert, remove, sort, filter, or drag changes item positions | Stable item identity is unavailable | stable keys + short layout animation |
 
 ## 8. Floating surfaces and task weight
 
@@ -145,14 +165,21 @@ Return the decision in this compact form:
 | Toggletip / 可点击提示 | Small supplemental content must open on click and may contain a link | Multi-field task or rich controls | button-triggered lightweight popover |
 | Popover / 弹出面板 | Anchored lightweight interactive content; context should remain visible | Task is complex/blocking or content is only a command list | `<Popover anchor={trigger}>` |
 | Menu / 菜单 | Anchored list of actions with menu keyboard behavior | Arbitrary interactive layout or form | menu button + menuitems |
+| Selection listbox popup / 选择列表弹层 | Select/combobox popup sets a controlled field value | Items execute commands | combobox owns a listbox popup |
+| Picker popup / 选择器弹层 | Anchored calendar, color, emoji, or other specialized chooser | Generic action list or long form task | picker-specific grid/list semantics |
 | Popconfirm / 气泡确认 | Low-risk, simple confirmation anchored to the initiating control | Destructive/irreversible action or explanation is long | small confirmation popover |
 | Modal dialog / 模态对话框 | Focused, bounded task must block background interaction | Supplemental info should coexist with main content | focus trap, labelled dialog, restore focus |
 | Alert dialog / 警告对话框 | Important message interrupts workflow and requires response | Ordinary form/task or passive status | `role="alertdialog"` with safe initial focus |
+| Confirmation dialog / 确认对话框 | Short consequential decision needs object and consequence stated | Passive information or destructive action needs stronger warning | labelled modal with explicit cancel/confirm |
+| Full-screen dialog / 全屏对话框 | Temporary immersive mobile or multi-field task cannot fit a small dialog | Task deserves a stable route | full viewport dialog with close/discard handling |
 | Non-modal dialog / 非模态对话框 | Floating task must remain while background stays interactive | Simple anchored content or mobile spatial constraint | non-modal dialog with explicit close |
 | Inline drawer / 行内抽屉 | Supplemental details/actions should coexist side-by-side with main content | Space is narrow or attention must be forced | drawer that shifts/resizes layout |
 | Overlay drawer / 覆盖式抽屉 | Contextual secondary task needs more room and attention | Critical confirmation or very short hint | edge overlay, modal only when warranted |
 | Bottom sheet / 底部弹层 | Touch-first actions/options/details on mobile | Desktop primary workflow or complex long form | bottom surface with safe-area and close gesture |
+| Side sheet / 侧边弹层 | Wide supplementary workflow needs an edge surface with header/actions | Brief anchored controls or primary deep workflow | large edge surface, modal state explicit |
 | Lightbox / 灯箱 | Focused media preview with next/previous/zoom | Editing metadata or completing a form | modal media viewer |
+| Command palette overlay / 命令面板弹层 | Keyboard-first actions and destinations need a searchable modal surface | Domain data search is the task | modal combobox-like command list |
+| Coach-mark overlay / 教学标注弹层 | One feature needs anchored first-use teaching | Ordered onboarding spans several targets | dismissible anchored teaching surface |
 
 ## 9. Notifications, help, and onboarding
 
@@ -180,6 +207,18 @@ Return the decision in this compact form:
 | Spinner / 旋转加载 | Small local action or compact region is busy | Page structure is still unknown or wait is long | status text + spinner |
 | Skeleton / 骨架屏 | Initial loading has stable predictable layout and perceived continuity matters | Layout/content shape is unknown or action is tiny | semantic container `aria-busy` + decorative skeleton |
 | Inline loading / 行内加载 | Action changes state in place, e.g. saving a row/button | Whole surface is unavailable | button/row status with preserved label |
+| Pending button / 按钮提交中 | One triggered action must prevent duplicate submission | Several regions or a background process are loading | preserve label/width + `aria-busy` + disabled |
+| Local region loading / 局部区域加载 | One bounded panel is unavailable while the page remains usable | Final layout is stable enough for a skeleton | labelled region + local status/spinner |
+| Route progress / 路由进度 | Navigation data loading replaces the page and exact progress is unknown | Only one local control is pending | top linear indeterminate progress |
+| Row-card skeleton / 行卡片骨架 | Repeated item shape is stable and initial data is loading | Existing items remain usable during refresh | repeated decorative skeletons in busy region |
+| Blocking surface loader / 阻塞式局部遮罩 | Interaction with one surface would be unsafe during a short operation | Controls can simply be disabled or background can stay usable | loader over bounded surface, not whole app |
+| Optimistic pending / 乐观更新等待态 | Success is likely and rollback is safe | Failure is costly or state cannot be restored | update immediately + subtle pending + rollback |
+| Background sync / 后台同步状态 | Existing content remains usable during refresh/sync | Stale content would be unsafe | keep content + polite timestamp/status |
+| Load-more pending / 加载更多等待态 | Existing list stays visible while the next cursor page loads | Whole list is initial-loading | footer status + disabled load-more control |
+| Pull-to-refresh / 下拉刷新 | Touch-first feed uses a familiar refresh gesture | Desktop-only workflow or no visible alternative exists | gesture indicator + accessible refresh path |
+| Lazy-media placeholder / 延迟媒体占位 | Deferred image/video must reserve layout and avoid shift | Media is already available or dimensions unknown | fixed dimensions + blur/color placeholder |
+| Streaming response / 流式响应状态 | Partial output is useful while more content arrives | Result is atomic and cannot be shown incrementally | visible chunks + `aria-busy` + generation status |
+| Per-item queue progress / 分项队列进度 | Multiple uploads/jobs can retry, cancel, or fail independently | Operation is one atomic task | per-item states and progress, optional aggregate |
 | Step progress / 阶段进度 | Named discrete stages communicate workflow position | Continuous completion percentage | ordered stage list |
 | Meter/gauge / 计量表 | Read-only scalar within known range, e.g. storage or battery | Task completion over time | `<meter min max low high value>` |
 | Result/status state / 结果状态 | Operation finished and next actions matter | Work is still in progress | success/error result panel |

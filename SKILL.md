@@ -1,6 +1,6 @@
 ---
 name: ui-spec
-description: Translate vague UI requests into precise Chinese and English component terminology, choose the correct variant, and implement it in an existing frontend stack. Use for frontend component selection, UI specifications, AI coding prompts, design-to-code work, or when terms such as dropdown, input, date picker, sidebar, progress, modal, table, navigation, upload, or form are ambiguous.
+description: Translate vague UI requests into precise Chinese and English component terminology, choose the correct scenario-specific subtype, and implement it in an existing frontend stack. Use for frontend component selection, UI specifications, AI coding prompts, design-to-code work, or when selection, input, date/time, navigation, overlay, disclosure, motion, loading, data, upload, or form patterns are ambiguous.
 ---
 
 # UI Spec
@@ -40,6 +40,9 @@ When the user asks for implementation, keep the specification concise and make t
 - Read [references/date-time-and-navigation.md](references/date-time-and-navigation.md) for date/time controls, sidebars, menus, tabs, breadcrumbs, pagination, steppers, and command navigation.
 - Read [references/feedback-overlays-data.md](references/feedback-overlays-data.md) for progress/loading, alerts, toast, modal, drawer, tooltip, popover, table, list, tree, cards, and data visualization shells.
 - Read [references/layout-media-actions.md](references/layout-media-actions.md) for buttons, layout, disclosure, media, upload, editors, and supporting UI primitives.
+- Read [references/navigation.md](references/navigation.md) when navigation scope, route versus view switching, responsive shell placement, hierarchy, or history behavior is ambiguous.
+- Read [references/overlays.md](references/overlays.md) when choosing among tooltip, toggletip, popover, menu, selection popup, dialog, drawer, sheet, lightbox, and other floating surfaces.
+- Read [references/motion-and-loading.md](references/motion-and-loading.md) when specifying expand/collapse, enter/exit, page/view transitions, reduced motion, or loading feedback by scope and progress knowledge.
 - Read [references/prompt-recipes.md](references/prompt-recipes.md) when rewriting a vague request into a high-precision AI coding prompt or reviewing one for ambiguity.
 
 Reference snippets express behavior, not a mandatory framework. Adapt them to the repository rather than introducing React or a new component library into a different stack.

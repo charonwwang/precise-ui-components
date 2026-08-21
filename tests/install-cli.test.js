@@ -49,6 +49,11 @@ test('installs, refuses accidental overwrite, and performs backup upgrade', t =>
   assert.equal(fs.readFileSync(path.join(backup, 'local-marker.txt'), 'utf8'), 'preserve in backup');
   assert.ok(!fs.existsSync(path.join(target, 'local-marker.txt')));
   assert.ok(fs.existsSync(path.join(target, 'references', 'component-decision-matrix.md')));
+
+  const doctor = run('doctor', '--target', target);
+  assert.equal(doctor.status, 0, doctor.stderr);
+  assert.match(doctor.stdout, /Valid Codex Skill runtime/);
+  assert.match(doctor.stdout, /Entries: SKILL.md, agents, references, scripts/);
 });
 
 test('supports help, version, and rejects unknown commands', () => {
@@ -63,4 +68,11 @@ test('supports help, version, and rejects unknown commands', () => {
   const invalid = run('remove');
   assert.notEqual(invalid.status, 0);
   assert.match(invalid.stderr, /Unknown command/);
+});
+
+test('doctor rejects a distribution repository used as the runtime directory', () => {
+  const doctor = run('doctor', '--target', root);
+  assert.notEqual(doctor.status, 0);
+  assert.match(doctor.stderr, /distribution-only files/);
+  assert.match(doctor.stderr, /Install with npx/);
 });
