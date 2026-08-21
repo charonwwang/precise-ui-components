@@ -17,15 +17,15 @@
 从 npm Registry 运行安装器，默认安装到 `${CODEX_HOME:-~/.codex}/skills/ui-spec`：
 
 ```bash
-npx ui-spec
+npx @charonwwang/ui-spec
 ```
 
-也可以显式写出安装子命令：`npx ui-spec install`。
+也可以显式写出安装子命令：`npx @charonwwang/ui-spec install`。
 
 更新已有安装：
 
 ```bash
-npx ui-spec install --force
+npx @charonwwang/ui-spec install --force
 ```
 
 `--force` 不会直接删除旧版本。安装器会先把它移动到同级的时间戳备份目录，再原子地安装新版本，并在输出中显示备份位置。
@@ -33,7 +33,7 @@ npx ui-spec install --force
 安装到自定义位置：
 
 ```bash
-npx ui-spec install --target /absolute/path/ui-spec
+npx @charonwwang/ui-spec install --target /absolute/path/ui-spec
 ```
 
 如果设置了 `CODEX_HOME`，默认目标会自动变为 `$CODEX_HOME/skills/ui-spec`。安装完成后，请重新启动 Codex 或新建任务，使 Skill 被重新发现。
