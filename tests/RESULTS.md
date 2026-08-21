@@ -15,6 +15,7 @@ Date: 2026-08-21
 ## npx installer validation
 
 - Local package execution through `npx --package .` installed the runtime files into an isolated target: PASS.
+- Post-push execution through `npx --yes github:charonwwang/precise-ui-components install` installed and revalidated the runtime from the public repository: PASS.
 - First install creates `SKILL.md`, `agents/`, `references/`, and `scripts/` without copying repository-only tests or package metadata: PASS.
 - Installing over an existing target without `--force` fails and preserves the target: PASS.
 - `--force` moves the existing target to a timestamped backup before replacement: PASS.
