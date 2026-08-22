@@ -60,6 +60,8 @@ Define the minimum page-level system:
 6. responsive transformations that preserve the same task and state;
 7. keyboard order, focus return, accessible names, and reduced motion.
 
+When the product facts match a recurring page structure, read `page-patterns.md` and use one pattern as a composition hypothesis. Keep the interaction ledger authoritative: the pattern may suggest regions and state boundaries, but every interactive element still routes to exactly one component family. Apply `visual-modifiers.md` only after those semantic decisions are stable.
+
 Avoid selecting several design systems. Start with native HTML where it satisfies the behavior. Choose one component library only when its supported primitives materially reduce the required custom composite behavior, and verify framework, SSR, accessibility, theming, bundle, and maintenance constraints before committing.
 
 ## 5. Produce an implementation blueprint
@@ -84,3 +86,5 @@ Then define data contracts, state ownership, responsive behavior, accessibility,
 - Loading indicators reflect real information; unknown progress has no fabricated percentage.
 - Collection semantics remain list, table, or grid even when virtualized.
 - Responsive changes preserve task, value, and focus rather than creating a second behavior model.
+- The selected page pattern has a stated user goal and rejected alternative; it does not replace per-interaction component decisions.
+- Visual modifiers are recorded separately from semantic subtype and state.

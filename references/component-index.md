@@ -2,6 +2,8 @@
 
 This file is routing-only. It contains no component subtype definitions. Read the one family file matching the user task; load a second family only when the decision crosses a real semantic boundary.
 
+Page patterns and visual modifiers are deliberately absent from this table. Route page composition through `page-patterns.md` and post-selection appearance through `visual-modifiers.md`; neither owns component subtypes.
+
 | Family | Use when the vague request concerns | Reference |
 |---|---|---|
 | Selection and suggestion controls / 选择与建议控件 | value model, controlled versus free value, option count, hierarchy, and popup behavior | [selection.md](components/selection.md) |

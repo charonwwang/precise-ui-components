@@ -53,6 +53,14 @@ Use when direct typing matters. Do not use `type=number` for identifiers, phone 
 <label>数量<input type="number" min={1} max={99} step={1} inputMode="numeric" value={qty} onChange={e=>setQty(e.currentTarget.valueAsNumber)} /></label>
 ```
 
+### Spinbutton — 步进数字框 / 数量步进器
+
+Use for a bounded discrete number when increment and decrement actions are frequent. Preserve direct entry when users may need to reach values far from the current value.
+
+```tsx
+<div role="group" aria-label="数量"><button type="button" onClick={()=>setQty(Math.max(1,qty-1))} aria-label="减少数量">−</button><input type="number" min={1} max={99} value={qty} onChange={e=>setQty(e.currentTarget.valueAsNumber)} /><button type="button" onClick={()=>setQty(Math.min(99,qty+1))} aria-label="增加数量">+</button></div>
+```
+
 ### Currency input — 金额输入框
 
 Keep a raw numeric value separate from localized display formatting.

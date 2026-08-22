@@ -1,6 +1,6 @@
 ---
 name: ui-spec
-description: Translate vague UI requests into precise Chinese and English component terminology, choose the correct scenario-specific subtype, and implement it in an existing frontend stack. Use for frontend component selection, UI specifications, AI coding prompts, design-to-code work, or when selection, input, date/time, navigation, overlay, disclosure, motion, loading, data, upload, or form patterns are ambiguous.
+description: Disambiguate UI component semantics, select an exact bilingual subtype, separate semantic choices from visual modifiers, compose common page patterns, and map the result to an existing frontend stack. Use when a component family, variant, or page composition is unclear, when nearby UI patterns must be compared, or when a UI requirement or coding prompt needs implementation-ready behavior. Do not use for purely visual styling with no behavioral or structural decision, routine edits to an already-specified component, or frontend work with no component-selection or page-composition decision.
 ---
 
 # UI Spec
@@ -13,10 +13,12 @@ Turn product intent into an implementation-ready component specification, then i
 2. Model the user task before naming a component: actor and goal, submitted value or command, data shape and scale, persistence, consequence, device context, and accessibility constraints. Ask only for missing facts that would change the family or subtype; otherwise state bounded assumptions.
 3. Resolve each vague noun to a precise component variant. State both Chinese and English names on first mention.
 4. Read the component index and route each independent interaction to one owning family file. A screen may need several families, but each component subtype must have one semantic owner.
-5. Record the selected subtype and the closest rejected alternatives with one-line reasons. This prevents visual similarity from overriding semantics.
-6. Define behavior, data shape, states, validation, keyboard interaction, responsive behavior, and accessibility before visual polish.
-7. Implement the smallest component set that satisfies the task. Do not add animation, nesting, search, multi-select, remote loading, or a component library unless the requirements warrant it.
-8. Verify normal, empty, loading, error, disabled, overflow, keyboard, reduced-motion, and narrow-screen states in proportion to the task.
+5. For a page or feature composition, choose a page pattern only after the interaction inventory exists. A page pattern composes families; it never owns or renames their subtypes.
+6. Record the selected subtype and the closest rejected alternatives with one-line reasons. This prevents visual similarity from overriding semantics.
+7. Apply visual modifiers only after semantic selection. Treat emphasis, shape, width, density, surface, and tone as orthogonal axes, not new component families.
+8. Define behavior, data shape, states, validation, keyboard interaction, responsive behavior, and accessibility before visual polish.
+9. Implement the smallest component set that satisfies the task. Do not add animation, nesting, search, multi-select, remote loading, or a component library unless the requirements warrant it.
+10. Verify normal, empty, loading, error, disabled, overflow, keyboard, reduced-motion, and narrow-screen states in proportion to the task.
 
 ## Output contract
 
@@ -37,6 +39,8 @@ When the user asks for implementation, keep the specification concise and make t
 
 - Read [references/component-index.md](references/component-index.md) first when the family itself is unclear. It is routing-only and contains no component definitions.
 - Read [references/greenfield-workflow.md](references/greenfield-workflow.md) for a from-scratch product, feature, page, or design system. Use it to turn requirements into an interaction inventory and then route each interaction to its component family.
+- Read [references/page-patterns.md](references/page-patterns.md) when the request concerns a dashboard, workspace, authentication entry, settings/admin surface, record-detail workflow, or marketing/landing page. Use patterns as compositions, not as component owners.
+- Read [references/visual-modifiers.md](references/visual-modifiers.md) only when words such as solid, outline, ghost, pill, full-width, underlined tabs, compact, elevated, or danger change presentation after the semantic subtype is known.
 - After routing, read exactly the matching file under `references/components/`. Each file owns one component family, its decision axes, bilingual subtypes, rejection rules, and corresponding code examples.
 - Read [references/framework-adaptation.md](references/framework-adaptation.md) before implementation when a repository is present, a framework/library is named, or code must work across different frontend environments.
 - Read [references/prompt-recipes.md](references/prompt-recipes.md) only when rewriting a vague request into a high-precision AI coding prompt or reviewing one for ambiguity.
@@ -54,6 +58,9 @@ Reference snippets express behavior, not a mandatory framework. Adapt them to th
 - Use determinate progress only when a meaningful value is known. Never fabricate percentages for unknown-duration work.
 - Do not call every floating panel a dropdown. Name the trigger, panel role, selection model, and dismissal behavior.
 - Do not choose by visual shape alone. A row of pill-shaped controls can be tabs, a segmented content switcher, a radio group, toggle buttons, or filter chips; the state and user task determine the component.
+- Do not promote a visual modifier into a semantic subtype. `Pill`, `outlined`, `full-width`, `underlined`, `compact`, and `elevated` describe treatment; pair them with an already-selected component.
+- Do not promote a page pattern into a component family. A dashboard, login page, workspace, settings page, or landing page is a composition of owned components and states.
+- Use auto-moving ticker/marquee content only for genuinely live, low-criticality updates. Provide pause/stop behavior, honor reduced motion, and preserve a static way to read every item; use a banner or notification center when users must reliably read or revisit the message.
 - A segmented control may represent a small exclusive form value or an alternate display mode. Do not classify it as view-only. Use radio semantics (`radiogroup`/`radio` with `aria-checked`) for an exclusive form answer; use toggle-button semantics (`button` with `aria-pressed`) only for pressed action-like modes. Never mix `radiogroup` with `aria-pressed`.
 - A command palette may validly use an editable combobox controlling a command listbox. Determine semantics from the actual input, popup, and result behavior instead of rejecting combobox semantics because the results are commands.
 - Virtualization is an implementation strategy, not a component family. Preserve list semantics for one-dimensional collections, table semantics for comparable columns, and grid semantics only for spreadsheet-like cell interaction.

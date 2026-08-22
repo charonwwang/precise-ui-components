@@ -2,7 +2,7 @@
 
 让 AI 不再把所有选择控件都叫“下拉框”。
 
-这是一个面向 Codex 的前端组件决策 Skill：它会根据真实场景选择精确的中英文组件子类型，解释为什么使用它、为什么排除相似组件，并适配当前项目已经采用的框架、UI 库、表单方案和 SSR 环境。
+这是一个面向 Codex 的前端组件与页面结构决策 Skill：它会根据真实场景选择精确的中英文组件子类型，解释为什么使用它、为什么排除相似组件，并适配当前项目已经采用的框架、UI 库、表单方案和 SSR 环境。它还会把语义组件、视觉修饰和页面组合分开，避免把“胶囊”“通栏”“高级感”误当成组件类型。
 
 它也支持从 0 开始的项目：先把产品需求拆成用户目标、值模型、数据规模、后果、等待方式和设备约束，再分别选择导航、输入、弹层、反馈、数据展示等组件族。语义蓝图确定后才选择框架和组件库，避免让现成组件名反过来扭曲需求。
 
@@ -103,6 +103,8 @@ node ui-spec-source/bin/ui-spec.js install
 3. 输出选择依据、排除项、值模型、焦点和响应式规则；
 4. 最后评估原生 HTML 或单一组件库能否覆盖这些需求。
 
+对于看板、登录页、工作台、设置页、记录详情或营销首页，Skill 会先选择页面模式，再把其中的导航、输入、命令、数据、反馈和状态分别交给对应组件族。对于 `pill`、`outline`、`full-width`、`underlined tabs` 等词，则会在组件语义确定后作为视觉修饰轴记录，而不会创建假的组件族。
+
 也可以直接描述界面需求；当请求涉及 dropdown、input、date picker、sidebar、modal、table、upload、progress、navigation 等容易混淆的组件时，Codex 可以自动选择这个 Skill。
 
 推荐提供这些场景事实：
@@ -125,7 +127,7 @@ Skill 的回答会尽量包含：
 
 ## 能力范围
 
-组件目录目前拆分为 20 个单一归属的组件族文件、217 个可判定子类型，并提供 241 个详细 TSX/HTML 行为示例。每个子类型的决策行还包含对应代码或语义伪代码：
+组件目录拆分为 20 个单一归属的组件族文件。目录校验器会在每次测试时动态统计可判定子类型和详细 TSX/HTML 行为示例，并检查重复归属、孤立详细条目、引用路由和代码围栏。每个子类型的决策行还包含对应代码或语义伪代码：
 
 | 家族 | 典型精确子类型 |
 |---|---|
@@ -137,7 +139,7 @@ Skill 的回答会尽量包含：
 | 导航 | Global/Local nav、Route/Content/Workspace tabs、Breadcrumb、Back link、Tree nav、Navigation drawer/rail、Pagination、Stepper、Skip link |
 | 展开收起 | Disclosure、Single/Multi-open accordion、Collapsible panel、Show more、Expandable row |
 | 浮层 | Tooltip、Toggletip、Hover card、Popover、Action/Selection/Picker popup、Modal/Non-modal/Full-screen dialog、Drawer、Side/Bottom sheet、Lightbox |
-| 通知反馈 | Toast、Inline alert、Banner、Callout、Actionable notification、Status、Result page |
+| 通知反馈 | Toast、Snackbar、Inline alert、Banner、Callout、Actionable notification、Notification center、Ticker、Status、Result page |
 | 帮助引导 | Contextual help、Coach mark、Product tour、Help link、Empty-state guidance |
 | 动效转场 | Expand/collapse reveal、Crossfade、Anchored scale-fade、Edge slide、Shared axis、Container transform、Layout reorder |
 | 加载进度 | Pending button、Inline/Region/Route loading、Skeleton、Blocking loader、Optimistic pending、Background sync、Streaming |
@@ -162,6 +164,12 @@ Skill 的回答会尽量包含：
 
 Skill 不会为了套示例擅自引入新的组件库。若项目中的本地 wrapper 没有提供源码或现有用例，它也不会编造 props、events 或 slots，而会明确标注“语义伪代码”并列出必须检查的接口契约。
 
+## 页面模式与视觉修饰
+
+页面模式不是组件族。当前提供 Monitoring dashboard、Analysis dashboard、Operational workspace、Authentication entry、Settings/admin、Record detail/master-detail 和 Marketing/landing page，用来形成页面结构假设；页面里的每个交互仍必须回到唯一组件族。
+
+视觉修饰也不是组件子类型。Skill 会分别记录强调度、形状、宽度、密度、表面、语气和 Tab 外观，并保持原有值模型、导航、命令、焦点、模态与持久化语义。例如“描边、胶囊、通栏”可以修饰一个已经判定的 Radio group 或 Primary button，但不能代替该判定。
+
 ## 示例判断
 
 | 场景 | 应选组件 | 关键排除项 |
@@ -183,13 +191,12 @@ npm test
 npm run validate:catalog
 ```
 
-当前验证结果：
+验证分为两层：
 
-- 官方 `skill-creator` 格式校验通过；
-- npx 安装、意外覆盖保护、备份升级和 0→1/语义回归测试共 7/7 通过；
-- 21 个语义场景用例已纳入测试集，其中既有 16/16 盲测记录保留；
-- 8/8 跨框架盲测通过；
-- React、Vue、Angular、Svelte 和 Vanilla 环境均已覆盖。
+- `npm test` 自动运行目录完整性、触发边界、关键语义不变量和 npx 安装器回归测试；
+- `tests/behavior-cases.md` 的 24 个语义选择与页面组合场景，以及 `tests/framework-cases.md` 的 8 个跨框架场景，是独立前向评估夹具，不会被描述成由普通单元测试自动执行的模型评估。
+
+CI 在 Windows、Linux 和 macOS 上使用 Node.js 18 与 22 运行测试和 `npm pack --dry-run`。目录指标直接以校验器输出为准，避免 README 与代码发生计数漂移。
 
 完整记录见 [tests/RESULTS.md](tests/RESULTS.md)。
 
@@ -202,6 +209,8 @@ ui-spec/
 ├── references/
 │   ├── component-index.md           # 只负责路由，不存放跨族组件明细
 │   ├── greenfield-workflow.md        # 0→1 需求建模、跨族编排与技术选型顺序
+│   ├── page-patterns.md              # 看板、工作台、登录、设置、详情与营销页组合模式
+│   ├── visual-modifiers.md           # 语义选择后的强调、形状、宽度、密度与外观修饰
 │   ├── framework-adaptation.md      # 跨框架和项目适配
 │   ├── prompt-recipes.md            # 通用规格模板，不拥有组件定义
 │   └── components/
@@ -226,7 +235,7 @@ ui-spec/
 │       ├── forms-and-validation.md
 │       └── data-visualization.md
 ├── bin/ui-spec.js                    # npx 安装器
-├── scripts/validate_catalog.py      # 确定性目录校验
+├── scripts/validate-catalog.js      # 跨平台确定性目录校验
 └── tests/                            # 安装器、语义和跨框架测试
 ```
 

@@ -33,3 +33,6 @@ Do not implement a full application.
 19. “Mod+K 打开命令面板，输入框过滤页面和命令，方向键移动并回车执行。判断其输入与弹层是否可以使用 combobox/listbox 语义。”
 20. “章节是单列、可点击的 10,000 条记录，没有列头和逐格编辑。需要窗口化渲染，但不能因为库支持 virtual table 就改成表格语义。”
 21. “项目使用 Ant Design 5，现有代码调用静态 message，但主题来自 ConfigProvider。准确说明能否显示、上下文限制和推荐迁移方式。”
+22. “删除草稿后显示 6 秒消息，并提供一次‘撤销’；如果用户把焦点移到消息上，倒计时暂停。判断 Toast、Snackbar 与 persistent actionable notification。”
+23. “三个胶囊形选项用于提交月付、季付、年付，只能选一个；视觉上要描边、通栏。先决定语义组件，再单独记录视觉修饰。”
+24. “从零设计一个经营分析看板：先判断 monitoring dashboard 还是 analysis dashboard，再拆出筛选、KPI、趋势、诊断明细、数据新鲜度与异常恢复所需的组件族。”

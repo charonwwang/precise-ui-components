@@ -1,4 +1,4 @@
 interface:
   display_name: "UI Spec"
-  short_description: "用中英文精确术语选择、描述、实现和验收常用前端 UI 组件"
-  default_prompt: "使用 $ui-spec 把我的界面需求改写为精确组件规格并实现。"
+  short_description: "精确选择 UI 组件，区分视觉修饰，并组合常见页面模式"
+  default_prompt: "使用 $ui-spec 把我的界面需求改写为精确组件与页面结构规格并实现。"

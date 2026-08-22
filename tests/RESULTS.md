@@ -1,56 +1,39 @@
 # Validation results
 
-Date: 2026-08-21
+This file distinguishes reproducible automated checks from historical model-evaluation evidence. Live catalog counts are intentionally not copied here; use `npm run validate:catalog` so documentation cannot drift from the source.
 
-## Deterministic validation
-
-- Official `skill-creator` validator: PASS.
-- Catalog integrity validator: PASS.
-- Single-owner component families: 20.
-- Family-owned subtype rows: 217.
-- Detailed TSX/HTML behavior examples: 239.
-- Every subtype row includes a corresponding code example or labelled semantic implementation cue.
-- Retired mixed-family reference files are absent, and duplicate subtype ownership across family files fails validation.
-- Framework mappings: React/Next.js, Vue/Nuxt, Angular, Svelte/SvelteKit, and Vanilla HTML/JS.
-- Source and installed `SKILL.md`/references: byte-for-byte equivalent after synchronization.
-
-## npx installer validation
-
-- Local package execution through `npx --package .` installed the runtime files into an isolated target: PASS.
-- Post-push execution through the GitHub package source installed and revalidated the runtime from the public repository: PASS.
-- First install creates `SKILL.md`, `agents/`, `references/`, and `scripts/` without copying repository-only tests or package metadata: PASS.
-- Installing over an existing target without `--force` fails and preserves the target: PASS.
-- `--force` moves the existing target to a timestamped backup before replacement: PASS.
-- Help, version, unknown-command handling, package file allowlist, and executable mode: PASS.
-- `doctor` accepts the minimal installed runtime and rejects a full distribution repository placed directly in the Skills directory: PASS.
-- Package dry run includes only the runtime, installer, README, license, and validation report; repository-only behavioral prompts and installer tests are excluded.
+## Automated validation
 
 Run locally:
 
 ```bash
-python3 scripts/validate_catalog.py
+npm test
+npm run pack:check
 ```
 
-## Independent semantic forward test
+`npm test` performs:
 
-An independent agent read the installed skill and the 16 prompts in `behavior-cases.md` without an answer key.
+- cross-platform Node validation of `SKILL.md`, reference routing, family ownership, bilingual decision rows, duplicate subtype ownership, unfinished placeholders, and code fences;
+- exact one-row/one-detail coverage for the migrated navigation and forms families;
+- semantic documentation regressions for greenfield routing, segmented-control semantics, combobox commands, virtualization, framework adaptation, and known ownership moves;
+- installer tests for first install, accidental-overwrite refusal, backup upgrade, `doctor`, help, version, and invalid commands.
 
-- Correct semantic subtype selection: 16/16.
-- Cases with ambiguous input facts: 0.
-- Each answer included decision facts, at least two rejected siblings, an exact reference heading, and an implementation cue.
-- The first pass exposed three documentation-addressability gaps: virtualized data grid, resizable inline side panel, and detailed global search guidance.
-- After adding dedicated family rows and detailed headings, targeted regression cases 5, 12, and 16 passed 3/3 with no remaining skill gap.
+GitHub Actions runs those checks plus `npm pack --dry-run` on Windows, Linux, and macOS with Node.js 18 and 22.
 
-## Independent cross-framework forward test
+## Forward-evaluation fixtures
 
-An independent agent read the installed skill and the eight environments in `framework-cases.md` without an answer key.
+[behavior-cases.md](behavior-cases.md) contains 24 semantic selection and composition prompts. [framework-cases.md](framework-cases.md) contains eight framework-adaptation prompts. They are fixtures for independent model evaluation, not assertions executed by Node's test runner.
 
-- Correct framework-invariant semantic subtype: 8/8.
-- New dependencies introduced: 0/8.
-- Correct syntax/environment mapping covered React + MUI + React Hook Form, Vue + Element Plus + vee-validate, Angular Material reactive forms, Svelte 5, Vanilla HTML/JS, TanStack Table, a local Vue drawer, and a local Svelte popover.
-- The first pass exposed a risk: examples could look runnable even when a local wrapper's props/events/slots were absent from the supplied evidence.
-- A hard rule now forbids presenting guessed wrapper APIs as verified code. Targeted regressions G and H passed 2/2: both preserved the correct component semantics, emitted labelled semantic pseudocode, and listed the exact wrapper contracts that still require repository inspection.
+A valid evaluation should record:
 
-## Interpretation
+- date, model, skill commit, and raw output;
+- selected bilingual subtype and decision facts;
+- rejected sibling variants;
+- exact reference file and heading;
+- dependency, framework, accessibility, and SSR decisions where applicable.
 
-The skill passed semantic selection and framework adaptation tests. A missing local-wrapper source remains a project-evidence limitation, not a reason to invent an API: the required behavior is to stop at a labelled adapter contract until the wrapper or an existing usage can be inspected.
+Historical independent runs informed the current regression rules, including fixes for virtualized collections, resizable inline panels, global search, segmented-control ARIA, command-palette combobox semantics, Ant Design contextual messaging, and unknown local-wrapper APIs. Historical pass counts are not presented as current automated results.
+
+## Known validation boundary
+
+Structural validation cannot prove that a model will make the right decision for every prompt. Run the forward-evaluation fixtures after material changes to routing, subtype definitions, or framework adaptation, and retain the raw evaluation artifacts when publishing a claim about model behavior.

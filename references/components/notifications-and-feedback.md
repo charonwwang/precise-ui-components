@@ -6,13 +6,18 @@ This file defines exactly one component family. Select subtypes by scope, urgenc
 | Subtype | Choose for this case | Reject or switch when | Code example / 代码示例 |
 |---|---|---|---|
 | Inline notification / 行内通知 | Nondisruptive feedback/status belongs to a task flow and persists near content | Short global confirmation has no local anchor | `inline alert/status region` |
-| Toast/snackbar / 轻提示 | Short, non-blocking result after an action; no critical detail | User must act, revisit, or compare details | `live region; timed only when safe` |
-| Actionable notification / 可操作通知 | One follow-up action resolves or explores the message | Several actions or complex resolution | `persistent inline/toast with one action` |
+| Toast / 轻提示 | Short, non-blocking result after an action; no action is required | User needs an undo/action, must revisit, or must compare details | `polite live region; timed only when safe` |
+| Snackbar / 带操作消息条 | Short result plus one immediate, safe action such as Undo or Retry | The action must remain available or resolution is complex | `temporary message with one action and safe timeout` |
+| Actionable notification / 可操作通知 | One follow-up action must remain available until handled or dismissed | The action is only an immediate reversible convenience | `persistent inline notification with one action` |
 | Callout / 说明提示块 | Contextual guidance loads with the page before action; persistent and not dismissible | It reports the result of an action | `static callout near relevant content` |
 | Banner / 横幅通知 | Product/system-wide issue not specific to one task | Message belongs to one field or local panel | `persistent page/site-level region` |
 | Alert / 警报 | Brief important message should be announced without taking focus | A response is required | `role="alert"` |
 | Status / 状态消息 | Polite background update such as saved, synced, or results count | Urgent interruption | `role="status"` |
 | Notification center / 通知中心 | Users need history, unread state, filtering, or later action | One ephemeral confirmation | `persistent list/feed of notifications` |
+| Ticker/marquee / 滚动信息条 | Several live, low-criticality updates share a narrow persistent region | Any item is critical, actionable, long, or must be revisited | `pausable ticker + static accessible list; reduced-motion fallback` |
+| Empty state / 空状态 | A collection or task surface has no content and needs explanation or a next step | Content failed to load or an operation just finished | `labelled empty region with optional primary action` |
+| Error state / 错误状态 | A region or page failed and recovery/context must stay visible | One field failed validation or a brief transient retry is enough | `persistent error region with recovery action` |
+| Result page / 结果页 | A consequential multi-step operation completed and the outcome plus next actions deserve a stable surface | A brief confirmation is enough | `stable success/failure result with next actions` |
 
 ## Detailed variants
 
@@ -32,12 +37,20 @@ Page- or site-level persistent announcement.
 <aside aria-label="系统公告" className="banner">系统将在 22:00 维护。<a href="/status">查看详情</a></aside>
 ```
 
-### Toast / snackbar — 轻提示 / 消息条
+### Toast — 轻提示
 
-Temporary non-modal feedback after an action. Do not place critical decisions only in a disappearing toast.
+Temporary non-modal feedback after an action. It reports a result but asks for no action. Do not place critical information only in a disappearing toast.
 
 ```tsx
-toast.success('已保存', {action:{label:'撤销',onClick:undo}, duration:5000})
+toast.success('已保存', {duration:4000})
+```
+
+### Snackbar — 带操作消息条
+
+Temporary feedback with exactly one immediate, safe action, commonly Undo or Retry. Pause the timeout while focus or pointer is inside; do not use it when the action must remain available.
+
+```tsx
+<Snackbar message="草稿已删除" action={<button onClick={undoDelete}>撤销</button>} duration={6000} pauseOnFocus />
 ```
 
 ### Empty state — 空状态
@@ -68,7 +81,7 @@ Use a polite live region for background outcomes that should be announced withou
 
 ### Actionable notification — 可操作通知
 
-Use a persistent inline or toast-style message with one clear follow-up action. If resolution needs several controls, link to a page or dialog.
+Use a persistent inline message with one clear follow-up action. If resolution needs several controls, link to a page or dialog. Use a snackbar instead when the action is merely an immediate reversible convenience.
 
 ```tsx
 <Notification persistent tone="warning" title="付款方式即将过期" action={<a href="/billing">更新</a>} />
@@ -88,4 +101,12 @@ Use when messages require history, unread state, filtering, or later action; a t
 
 ```tsx
 <NotificationCenter items={notifications} filter={filter} onMarkRead={markRead} onOpenItem={openNotification} />
+```
+
+### Ticker/marquee — 滚动信息条 / 实时播报条
+
+Use only for several short, live, low-criticality updates such as scores or market ticks. Do not use it for maintenance warnings, policy changes, errors, or calls to action. Provide pause/stop, pause on hover and focus, a static readable list or log, and a non-moving reduced-motion presentation.
+
+```tsx
+<LiveTicker items={updates} aria-label="实时动态" pauseable pauseOnHover pauseOnFocus reducedMotion="static-list" />
 ```

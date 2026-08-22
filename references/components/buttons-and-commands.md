@@ -2,6 +2,8 @@
 
 This file defines exactly one component family. Select subtypes by navigation versus mutation, action priority, command density, default action, and destructive consequence.
 
+Terms such as solid, outline, ghost, pill, and full-width are post-selection visual modifiers, not button subtypes. When they matter, apply `../visual-modifiers.md` after choosing the semantic action.
+
 ## Decision table
 | Subtype | Choose for this case | Reject or switch when | Code example / 代码示例 |
 |---|---|---|---|
